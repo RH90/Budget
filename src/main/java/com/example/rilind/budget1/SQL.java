@@ -27,6 +27,8 @@ public class SQL {
 
     public  void start(Context context) throws SQLException, ClassNotFoundException, IOException {
         String s ;
+        //comment
+        //etwet
         this.context=context;
         try {
             Class.forName("com.mysql.jdbc.Driver");
