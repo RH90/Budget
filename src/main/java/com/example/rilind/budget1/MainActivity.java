@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     static TextView textView;
     static String message = "";
-
+    static int i=0;
+    static String x="";
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,22 +52,32 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        if(i==0) {
 
-        final SQL fc = new SQL();
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    fc.start(getApplicationContext());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+            final SQL fc = new SQL();
+
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        fc.start(getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+            }).start();
+           i++;
+        }else{
+            start();
+        }
 
+    }
+    public void start(){
+        textView = (TextView) findViewById(R.id.textView);
+        textView.setText(x);
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -77,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
             textView = (TextView) findViewById(R.id.textView);
             message = intent.getStringExtra("message");
             textView.append(message);
+            x += message;
 
         }
     };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
