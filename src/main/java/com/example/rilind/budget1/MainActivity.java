@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 public void run() {
                     try {
+
+// haha , here is Saif :D 
+
                         fc.start(getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
