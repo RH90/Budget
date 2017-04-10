@@ -46,7 +46,7 @@ public class SQL {
         Connection con = null;
         try {
 
-            con = DriverManager.getConnection("jdbc:mysql://192.168.1.8:3306/world", "RH9011", "RH9011");
+            con = DriverManager.getConnection("jdbc:mysql://194.47.45.136:3306/world", "RH9011", "RH9011");
             stmt = con.createStatement();
             String query = "select * from city";
             rs = stmt.executeQuery(query);
