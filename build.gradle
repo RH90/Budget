@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
 
-// Rilind // here is eng Saif , the best engineer ever
->>>>>>> origin/master
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
