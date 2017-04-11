@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-// SAIF 
+Hello there its me 
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -30,7 +30,7 @@ android {
     }
 }
 
-//habibi batata 
+//habibi batata
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
