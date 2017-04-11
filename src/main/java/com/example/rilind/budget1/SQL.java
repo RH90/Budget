@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import junit.runner.Version;
-
+// Hello , ihere is Saif
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * Created by Rilind on 2017-04-07.
  */
-
+// Hello , eng saif is here :D 
 public class SQL {
 
     Intent intent = new Intent("event");
