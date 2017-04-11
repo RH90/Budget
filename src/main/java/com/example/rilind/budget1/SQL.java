@@ -24,7 +24,7 @@ public class SQL {
 
     Intent intent = new Intent("event");
     Context context = null;
-
+//saif
     public  void start(Context context) throws SQLException, ClassNotFoundException, IOException {
         String s ;
         //comment
