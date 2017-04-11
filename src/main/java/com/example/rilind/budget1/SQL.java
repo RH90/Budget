@@ -33,7 +33,7 @@ public class SQL {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            s = "wwwq";
+            s = "wwwqq";
             intent.putExtra("message", s);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             while (!MainActivity.message.equals(s)) {
