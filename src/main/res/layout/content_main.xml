@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
+        android:hint="Database IP"
         android:id="@+id/editText"
         android:layout_marginEnd="152dp"
         app:layout_constraintRight_toRightOf="parent"
@@ -36,8 +36,18 @@
             android:fontFamily="monospace"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/textView"
-            android:text="hejaf" />
+            android:id="@+id/textView" />
     </ScrollView>
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:onClick="send"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/editText"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

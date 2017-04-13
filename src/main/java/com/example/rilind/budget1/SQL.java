@@ -25,10 +25,16 @@ public class SQL {
     Intent intent = new Intent("event");
     Context context = null;
 //saif
-    public  void start(Context context) throws SQLException, ClassNotFoundException, IOException {
+    public  void start(Context context,String ip) throws SQLException, ClassNotFoundException, IOException {
         String s ;
-        //comment
-        //etwet
+        //String ip ="hej";
+        s = "test";
+        intent.putExtra("message", s);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        while (!MainActivity.message.equals(s)) {
+
+        }
+
         this.context=context;
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -46,7 +52,7 @@ public class SQL {
         Connection con = null;
         try {
 
-            con = DriverManager.getConnection("jdbc:mysql://194.47.45.136:3306/world", "RH9011", "RH9011");
+            con = DriverManager.getConnection("jdbc:mysql://"+ip+":3306/world", "RH9011", "RH9011");
             stmt = con.createStatement();
             String query = "select * from city";
             rs = stmt.executeQuery(query);

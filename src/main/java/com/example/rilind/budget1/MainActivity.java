@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +17,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,12 +31,14 @@ public class MainActivity extends AppCompatActivity {
     static String message = "";
     static int i=0;
     static String x="";
+    SQL fc=null;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         textView = (TextView) findViewById(R.id.textView);
         //textView.setMovementMethod(new ScrollingMovementMethod());
-
+        fc = new SQL();
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("event"));
 
@@ -52,28 +56,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        if(i==0) {
+        start();
 
-            final SQL fc = new SQL();
 
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
-
-                        fc.start(getApplicationContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-           i++;
-        }else{
-            start();
-        }
 
     }
     public void start(){
@@ -92,6 +77,22 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+    public void send(View view) throws IOException {
+        editText = (EditText) findViewById(R.id.editText);
+        textView = (TextView) findViewById(R.id.textView);
+            new Thread(() -> {
+                try {
+
+                    fc.start(getApplicationContext(),editText.getText().toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+    }
 
 
     @Override
