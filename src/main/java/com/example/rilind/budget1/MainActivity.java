@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     try {
 
-// haha , here is Saif :D 
-
                         fc.start(getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
