@@ -24,9 +24,10 @@ public class SQL {
 
     Intent intent = new Intent("event");
     Context context = null;
-//saif
-    public  void start(Context context,String ip) throws SQLException, ClassNotFoundException, IOException {
-        String s ;
+
+    //saif
+    public void start(Context context, String ip) throws SQLException, ClassNotFoundException, IOException {
+        String s;
         //String ip ="hej";
         s = "test";
         intent.putExtra("message", s);
@@ -35,7 +36,7 @@ public class SQL {
 
         }
 
-        this.context=context;
+        this.context = context;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -52,7 +53,7 @@ public class SQL {
         Connection con = null;
         try {
 
-            con = DriverManager.getConnection("jdbc:mysql://"+ip+":3306/world", "RH9011", "RH9011");
+            con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/world", "RH9011", "RH9011");
             stmt = con.createStatement();
             String query = "select * from city";
             rs = stmt.executeQuery(query);

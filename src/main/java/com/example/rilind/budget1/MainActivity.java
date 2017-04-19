@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     static TextView textView;
     static String message = "";
-    static int i=0;
-    static String x="";
-    SQL fc=null;
+    static int i = 0;
+    static String x = "";
+    SQL fc = null;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -59,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         start();
 
 
-
     }
-    public void start(){
+
+    public void start() {
         textView = (TextView) findViewById(R.id.textView);
         textView.setText(x);
     }
@@ -77,21 +78,26 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+    public void start(View view){
+
+        Intent intent = new Intent(this, start.class);
+        startActivity(intent);
+    }
+
     public void send(View view) throws IOException {
         editText = (EditText) findViewById(R.id.editText);
         textView = (TextView) findViewById(R.id.textView);
-            new Thread(() -> {
-                try {
-
-                    fc.start(getApplicationContext(),editText.getText().toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+        new Thread(() -> {
+            try {
+                fc.start(getApplicationContext(), editText.getText().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 
@@ -117,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-  //  public void button(View view) throws IOException {
-  //      editText = (EditText) findViewById(R.id.ediText);
-  //      check = String.valueOf(editText.getText());
-  //  }
+    //  public void button(View view) throws IOException {
+    //      editText = (EditText) findViewById(R.id.ediText);
+    //      check = String.valueOf(editText.getText());
+    //  }
 
     public static void edit(String s) {
         textView.append(s);
