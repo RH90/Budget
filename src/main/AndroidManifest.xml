@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".start"></activity>
+        <activity android:name=".start" />
+        <activity android:name=".History" />
+        <activity android:name=".Results"></activity>
     </application>
 
 </manifest>
