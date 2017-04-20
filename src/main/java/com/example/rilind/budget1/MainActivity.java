@@ -30,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
     static TextView textView;
     static String message = "";
     static int i = 0;
+    static String ip="";
     static String x = "";
-    SQL fc = null;
+    static SQL fc = null;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -87,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void send(View view) throws IOException {
         editText = (EditText) findViewById(R.id.editText);
-        textView = (TextView) findViewById(R.id.textView);
+        ip=editText.getText().toString();
+        /*
         new Thread(() -> {
             try {
                 fc.start(getApplicationContext(), editText.getText().toString());
@@ -99,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }).start();
+        */
+
     }
 
 

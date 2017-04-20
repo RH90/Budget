@@ -9,10 +9,14 @@ import junit.runner.Version;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,37 +30,24 @@ public class SQL {
     Context context = null;
 
     //saif
-    public void start(Context context, String ip) throws SQLException, ClassNotFoundException, IOException {
+    public void start(String ip,String Item,double price, double moms, String comment) throws SQLException, ClassNotFoundException, IOException {
         String s;
-        //String ip ="hej";
-        s = "test";
-        intent.putExtra("message", s);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        while (!MainActivity.message.equals(s)) {
-
-        }
-
         this.context = context;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            s = "wwwqq";
-            intent.putExtra("message", s);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-            while (!MainActivity.message.equals(s)) {
-
-            }
-
         }
         Statement stmt = null;
         ResultSet rs = null;
         Connection con = null;
         try {
-
-            con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/world", "RH9011", "RH9011");
+            con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
             stmt = con.createStatement();
-            String query = "select * from city";
-            rs = stmt.executeQuery(query);
+            Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String query = "INSERT INTO Budget (Item,Price,Moms,Comment,Date) VALUES ('"+Item+"', "+price+","+moms+",'"+comment+"',CURDATE());";
+            stmt.executeUpdate(query);
+            /*
             ResultSetMetaData columns = rs.getMetaData();
 
             s = String.format("%4s | %-34s | %3s | %-10s\n", columns.getColumnName(1), columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4));
@@ -65,10 +56,12 @@ public class SQL {
             while (!MainActivity.message.equals(s)) {
 
             }
-
+            */
 
             //System.out.printf("%4s | %-34s | %3s | %-10s\n", columns.getColumnName(1), columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4));
             //System.out.println("------------------------------------------------------------------");
+
+            /*
             int a = 0, b = 0, c = 0, d = 0;
 
             while (rs.next()) {
@@ -85,26 +78,10 @@ public class SQL {
                     d = rs.getString(4).length();
                 }
             }
-
-            rs.beforeFirst();
-            while (rs.next()) {//get first result
-                s = String.format("%1$-" + a + "s | %2$-" + b + "s | %3$-" + 11 + "s | %4$-" + d + "s\n", rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
-                intent.putExtra("message", s);
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                while (!MainActivity.message.equals(s)) {
-
-                }
-            }
-
+*/
         } catch (SQLException ex) {
             System.out.println("Login fail");
         } finally {
-            s = String.format("Hej");
-            intent.putExtra("message", s);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-            while (!MainActivity.message.equals(s)) {
-
-            }
             try {
                 if (rs != null) {
                     rs.close();
