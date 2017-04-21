@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class start extends AppCompatActivity {
 
@@ -24,7 +23,7 @@ public class start extends AppCompatActivity {
         EditText sell_comment =(EditText) findViewById(R.id.sell_comment);
         new Thread(() -> {
             try {
-                fc.start(MainActivity.ip,
+                fc.input(MainActivity.ip,
                         sell_item.getText().toString(),
                         Double.parseDouble(sell_price.getText().toString()),
                         Double.parseDouble(sell_moms.getText().toString()),
@@ -45,7 +44,7 @@ public class start extends AppCompatActivity {
         EditText buy_comment =(EditText) findViewById(R.id.buy_comment);
         new Thread(() -> {
             try {
-                fc.start(MainActivity.ip,
+                fc.input(MainActivity.ip,
                         buy_item.getText().toString(),
                         Double.parseDouble(buy_price.getText().toString()),
                         Double.parseDouble(buy_moms.getText().toString()),

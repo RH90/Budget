@@ -27,58 +27,32 @@ import java.util.logging.Logger;
 public class SQL {
 
     Intent intent = new Intent("event");
-    Context context = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    Connection con = null;
 
-    //saif
-    public void start(String ip,String Item,double price, double moms, String comment) throws SQLException, ClassNotFoundException, IOException {
-        String s;
-        this.context = context;
+    public Connection connect(String ip) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
         }
-        Statement stmt = null;
-        ResultSet rs = null;
-        Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
+            return con;
+        } catch (SQLException ex) {
+            System.out.println("Login fail");
+            return null;
+        }
+    }
+
+    public void input(String ip, String Item, double price, double moms, String comment) throws SQLException, ClassNotFoundException, IOException {
+        try {
+            con = connect(ip);
+
             stmt = con.createStatement();
-            Date date = new Date();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String query = "INSERT INTO Budget (Item,Price,Moms,Comment,Date) VALUES ('"+Item+"', "+price+","+moms+",'"+comment+"',CURDATE());";
+            String query = "INSERT INTO Budget (Item,Price,Moms,Comment,Date) VALUES ('" + Item + "', " + price + "," + moms + ",'" + comment + "',CURDATE());";
             stmt.executeUpdate(query);
-            /*
-            ResultSetMetaData columns = rs.getMetaData();
 
-            s = String.format("%4s | %-34s | %3s | %-10s\n", columns.getColumnName(1), columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4));
-            intent.putExtra("message", s);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-            while (!MainActivity.message.equals(s)) {
-
-            }
-            */
-
-            //System.out.printf("%4s | %-34s | %3s | %-10s\n", columns.getColumnName(1), columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4));
-            //System.out.println("------------------------------------------------------------------");
-
-            /*
-            int a = 0, b = 0, c = 0, d = 0;
-
-            while (rs.next()) {
-                if (rs.getString(1).length() > a) {
-                    a = rs.getString(1).length();
-                }
-                if (rs.getString(2).length() > b) {
-                    b = rs.getString(2).length();
-                }
-                if (rs.getString(3).length() > c) {
-                    c = rs.getString(3).length();
-                }
-                if (rs.getString(4).length() > d) {
-                    d = rs.getString(4).length();
-                }
-            }
-*/
         } catch (SQLException ex) {
             System.out.println("Login fail");
         } finally {
@@ -99,5 +73,71 @@ public class SQL {
             }
         }
     }
+
+    public void read(String ip, Context context) {
+        try {
+            con = connect(ip);
+
+            stmt = con.createStatement();
+            String query = "select * from budget";
+            rs = stmt.executeQuery(query);
+            ResultSetMetaData columns = rs.getMetaData();
+            rs.beforeFirst();
+
+            String s;
+            s = String.format("%-10s|%5s|%4s|%-13s|%-5s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
+
+
+            //}
+
+            /*
+            int a = 0, b = 0, c = 0, d = 0;
+            while (rs.next()) {
+                if (rs.getString(1).length() > a) {
+                    a = rs.getString(1).length();
+                }
+                if (rs.getString(2).length() > b) {
+                    b = rs.getString(2).length();
+                }
+                if (rs.getString(3).length() > c) {
+                    c = rs.getString(3).length();
+                }
+                if (rs.getString(4).length() > d) {
+                    d = rs.getString(4).length();
+                }
+            }
+            */
+            while (rs.next()) {//get first result
+
+                s = s + String.format("%-10s|%5s|%4s|%-13s|%-5s\n", rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+
+            }
+            intent.putExtra("message", s);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        } catch (SQLException ex) {
+            System.out.println("Login fail");
+        } finally {
+            try {
+
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+
+
+            } catch (SQLException ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+
+
+    }
+
 
 }
