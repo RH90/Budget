@@ -4,18 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
+import android.graphics.Color;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.util.concurrent.Semaphore;
 
 public class History extends AppCompatActivity {
     static String message = "";
@@ -43,9 +41,8 @@ public class History extends AppCompatActivity {
         // Always call the superclass so it can save the view hierarchy state
 
     }
-
+    // reloads the textfield when rotating
     public void start() {
-
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setMovementMethod(new ScrollingMovementMethod());
         textView.setText(x);
@@ -58,7 +55,7 @@ public class History extends AppCompatActivity {
 
         textView.setText("");
 
-
+        //connect to database
         new Thread(() -> {
             try {
                 sql = new SQL();
@@ -69,16 +66,23 @@ public class History extends AppCompatActivity {
         }).start();
 
 
-    }
 
+    }
+    // update textfield
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
 
             message = intent.getStringExtra("message");
+            Spannable wordtoSpan = new SpannableString(message);
+            for (int i =0;i<message.length()/47;i++){
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 11+(47*i), 16+(47*i), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+
             TextView textView = (TextView) findViewById(R.id.textView);
-            textView.append(message);
+            textView.setText(wordtoSpan);
 
             x += message;
 

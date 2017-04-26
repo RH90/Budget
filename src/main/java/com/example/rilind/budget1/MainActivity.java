@@ -1,15 +1,11 @@
 package com.example.rilind.budget1;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,26 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
-
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    static String check = "";
     EditText editText;
-    static TextView textView;
-
-    static int i = 0;
     static String ip="";
-    static String x = "";
-    static SQL fc = null;
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        textView = (TextView) findViewById(R.id.textView);
-        //textView.setMovementMethod(new ScrollingMovementMethod());
-        fc = new SQL();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
@@ -54,24 +38,16 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        start();
 
 
     }
-
-    public void start() {
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setText(x);
-    }
-
-
+    // go to start window
     public void start(View view){
-
         Intent intent = new Intent(this, start.class);
         startActivity(intent);
     }
 
-
+     //set ip address
     public void send(View view) throws IOException {
         editText = (EditText) findViewById(R.id.editText);
         ip=editText.getText().toString();
@@ -98,14 +74,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //  public void button(View view) throws IOException {
-    //      editText = (EditText) findViewById(R.id.ediText);
-    //      check = String.valueOf(editText.getText());
-    //  }
-
-    public static void edit(String s) {
-        textView.append(s);
     }
 }

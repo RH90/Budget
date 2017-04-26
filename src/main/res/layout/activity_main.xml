@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.example.rilind.budget1.MainActivity">
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

@@ -5,32 +5,26 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import junit.runner.Version;
-// Hello , ihere is Saif
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by Rilind on 2017-04-07.
  */
-// Hello , eng saif is here :D 
-public class SQL {
+    public class SQL {
 
     Intent intent = new Intent("event");
     Statement stmt = null;
     ResultSet rs = null;
     Connection con = null;
-
+    // connect to database
     public Connection connect(String ip) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -44,11 +38,10 @@ public class SQL {
             return null;
         }
     }
-
+    // input data to database
     public void input(String ip, String Item, double price, double moms, String comment) throws SQLException, ClassNotFoundException, IOException {
         try {
             con = connect(ip);
-
             stmt = con.createStatement();
             String query = "INSERT INTO Budget (Item,Price,Moms,Comment,Date) VALUES ('" + Item + "', " + price + "," + moms + ",'" + comment + "',CURDATE());";
             stmt.executeUpdate(query);
@@ -73,7 +66,7 @@ public class SQL {
             }
         }
     }
-
+    // read data from database
     public void read(String ip, Context context) {
         try {
             con = connect(ip);
@@ -82,10 +75,8 @@ public class SQL {
             String query = "select * from budget";
             rs = stmt.executeQuery(query);
             ResultSetMetaData columns = rs.getMetaData();
-            rs.beforeFirst();
-
             String s;
-            s = String.format("%-10s|%5s|%4s|%-13s|%-5s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
+            s = String.format("%-10s|%5s|%4s|%-13s|%-10s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
 
 
             //}
@@ -107,11 +98,13 @@ public class SQL {
                 }
             }
             */
-            while (rs.next()) {//get first result
+            rs.afterLast();
+            while (rs.previous()) {//get first result
 
-                s = s + String.format("%-10s|%5s|%4s|%-13s|%-5s\n", rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                s = s + String.format("%-10s|%5s|%4s|%-13s|%-10s\n", rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
 
             }
+            // send string to textfield
             intent.putExtra("message", s);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } catch (SQLException ex) {

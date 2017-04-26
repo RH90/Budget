@@ -7,7 +7,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="com.example.rilind.budget1.History">
-
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
     <Button
         android:text="1 år"
         android:layout_width="wrap_content"
