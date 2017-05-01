@@ -75,15 +75,13 @@ public class History extends AppCompatActivity {
             // Get extra data included in the Intent
 
             message = intent.getStringExtra("message");
-            Spannable wordtoSpan = new SpannableString(message);
-            for (int i =0;i<message.length()/47;i++){
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 11+(47*i), 16+(47*i), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-
+            //Spannable wordtoSpan = new SpannableString(message);
+            //for (int i =0;i<message.length()/47;i++){
+            //    wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 11+(47*i), 16+(47*i), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //}
             TextView textView = (TextView) findViewById(R.id.textView);
-            textView.setText(wordtoSpan);
-
+            //textView.setText(wordtoSpan);
+            textView.setText(message);
             x += message;
 
         }

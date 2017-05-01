@@ -39,11 +39,11 @@ import java.util.logging.Logger;
         }
     }
     // input data to database
-    public void input(String ip, String Item, double price, double moms, String comment) throws SQLException, ClassNotFoundException, IOException {
+    public void input(String ip, String Item, double moms, double price, String comment,String type) throws SQLException, ClassNotFoundException, IOException {
         try {
             con = connect(ip);
             stmt = con.createStatement();
-            String query = "INSERT INTO Budget (Item,Price,Moms,Comment,Date) VALUES ('" + Item + "', " + price + "," + moms + ",'" + comment + "',CURDATE());";
+            String query = "INSERT INTO Budget (Item,Moms,Price,Comment,Date,IN_UT) VALUES ('" + Item + "', " +moms + "," + price  + ",'" + comment + "',CURDATE(),'"+type+"');";
             stmt.executeUpdate(query);
 
         } catch (SQLException ex) {
@@ -76,7 +76,7 @@ import java.util.logging.Logger;
             rs = stmt.executeQuery(query);
             ResultSetMetaData columns = rs.getMetaData();
             String s;
-            s = String.format("%-10s|%5s|%4s|%-13s|%-10s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
+            s = String.format("%-10s|%4s|%5s|%-13s|%-10s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
 
 
             //}
@@ -100,9 +100,10 @@ import java.util.logging.Logger;
             */
             rs.afterLast();
             while (rs.previous()) {//get first result
-
-                s = s + String.format("%-10s|%5s|%4s|%-13s|%-10s\n", rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
-
+                if(rs.getString(7).endsWith("UT"))
+                s = s + String.format("%-10s|%4s|%5s|%-13s|%-10s\n", rs.getString(2), rs.getString(3), "-"+rs.getString(4), rs.getString(5), rs.getString(6));
+                else
+                    s = s + String.format("%-10s|%4s|%5s|%-13s|%-10s\n", rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
             }
             // send string to textfield
             intent.putExtra("message", s);

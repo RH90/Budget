@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Budget1</string>
     <string name="action_settings">Settings</string>
+    <string name="prompt">prompt</string>
+    <string-array name="moms">
+        <item>Moms</item>
+        <item>25%</item>
+        <item>12%</item>
+        <item>6%</item>
+    </string-array>
 </resources>
