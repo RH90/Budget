@@ -25,43 +25,43 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="Expenses"
-        android:layout_width="89dp"
+        android:text="Köpt + moms"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:id="@+id/textView5"
+        android:id="@+id/Kopt"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintBottom_toTopOf="@+id/moms"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="Skatt"
+        android:text="Vinst"
         android:layout_width="42dp"
-        android:layout_height="24dp"
         android:id="@+id/textView7"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="32dp"
+        android:layout_height="30dp" />
 
     <TextView
         android:text="Moms"
         android:layout_width="55dp"
         android:layout_height="30dp"
-        android:id="@+id/textView9"
+        android:id="@+id/moms"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/textView7"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="Sell"
-        android:layout_width="42dp"
+        android:text="Sålt + moms"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:id="@+id/textView8"
+        android:id="@+id/Solt"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
-        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/Kopt"
+        android:layout_marginBottom="8dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
@@ -76,35 +76,39 @@
 
     <TextView
         android:layout_width="248dp"
-        android:layout_height="34dp"
-        android:id="@+id/textView10"
+        android:id="@+id/four"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="32dp"
+        android:textSize="18sp"
+        android:layout_height="30dp" />
 
     <TextView
         android:layout_width="248dp"
-        android:layout_height="34dp"
-        android:id="@+id/textView13"
+        android:id="@+id/three"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView10"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintBottom_toTopOf="@+id/four"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:layout_height="30dp" />
 
     <TextView
         android:layout_width="248dp"
-        android:layout_height="34dp"
-        android:id="@+id/textView12"
+        android:id="@+id/two"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintBottom_toTopOf="@+id/three"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:layout_height="30dp" />
 
     <TextView
         android:layout_width="248dp"
-        android:layout_height="34dp"
-        android:id="@+id/textView11"
+        android:id="@+id/one"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView12"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintBottom_toTopOf="@+id/two"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:layout_height="30dp" />
 
     <Button
         android:text="Button"
@@ -132,15 +136,14 @@
     <Spinner
         android:layout_height="42dp"
         android:id="@+id/month_f"
-
         android:layout_marginStart="2dp"
         app:layout_constraintLeft_toRightOf="@+id/year_f"
         app:layout_constraintRight_toLeftOf="@+id/day_f"
         android:layout_marginEnd="2dp"
         android:layout_marginTop="80dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.46"
-        android:layout_width="0dp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_width="0dp"/>
 
     <Spinner
         android:layout_height="42dp"

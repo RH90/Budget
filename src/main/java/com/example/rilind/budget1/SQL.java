@@ -31,10 +31,10 @@ import java.util.logging.Logger;
         } catch (ClassNotFoundException e) {
         }
         try {
-            con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
+            Connection con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
             return con;
         } catch (SQLException ex) {
-            System.out.println("Login fail");
+            System.out.println("Connection fail");
             return null;
         }
     }
@@ -130,6 +130,53 @@ import java.util.logging.Logger;
             }
         }
 
+
+    }
+
+    public void results(String ip, Context context,String from,String to){
+        try {
+            con = connect(ip);
+            stmt = con.createStatement();
+            String query = "SELECT * FROM budget WHERE (Date BETWEEN '"+from+"' AND '"+to+"')";
+            rs = stmt.executeQuery(query);
+            String s="";
+            double moms_in=0;
+            double moms_ut = 0;
+            double solt_med_moms=0;
+            double kopt_med_moms=0;
+            while (rs.next()) {//get first result
+                if(rs.getString(7).endsWith("UT")) {
+                    moms_ut += Double.parseDouble(rs.getString(3)) * Double.parseDouble(rs.getString(4));
+                    kopt_med_moms+=Double.parseDouble(rs.getString(4))+moms_ut;
+                }else {
+                    moms_in += Double.parseDouble(rs.getString(3)) * Double.parseDouble(rs.getString(4));
+                    solt_med_moms+=Double.parseDouble(rs.getString(4)) +moms_in;
+                }
+            }
+            double moms_total = moms_in-moms_ut;
+            double vinst= solt_med_moms-kopt_med_moms;
+            s=String.format("%.2f,%.2f,%.2f,%.2f",solt_med_moms,kopt_med_moms,moms_total,vinst);
+            intent.putExtra("message", s);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        } catch (SQLException ex) {
+            System.out.println("Login fail");
+        } finally {
+            try {
+
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
 
     }
 
