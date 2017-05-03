@@ -50,7 +50,7 @@ import java.util.logging.Logger;
             String query = "INSERT INTO Budget (Item,Moms,Price,Comment,Date,IN_UT) VALUES ('" + Item + "', " +moms + "," + price  + ",'" + comment + "',CURDATE(),'"+type+"');";
             stmt.executeUpdate(query);
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println("Login fail");
         } finally {
             try {
@@ -64,7 +64,7 @@ import java.util.logging.Logger;
                     con.close();
                 }
 
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
             }
@@ -112,7 +112,7 @@ import java.util.logging.Logger;
             // send string to textfield
             intent.putExtra("message", s);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println("Login fail");
         } finally {
             try {
