@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class start extends AppCompatActivity {
 
@@ -40,19 +41,27 @@ public class start extends AppCompatActivity {
             moms=0.06;
         else
             moms=0;
-        new Thread(() -> {
-            try {
-                fc.input(MainActivity.ip,
-                        sell_item.getText().toString(),
-                        moms,
-                        Double.parseDouble(sell_price.getText().toString()),
-                        sell_comment.getText().toString(),"IN");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception ex){
 
-            }
-        }).start();
+        if(moms!=0) {
+            Thread thread = new Thread(){
+                public void run(){
+                    try {
+                        fc.input(MainActivity.ip,
+                                sell_item.getText().toString(),
+                                moms,
+                                Double.parseDouble(sell_price.getText().toString()),
+                                sell_comment.getText().toString(), "IN");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
+        }
 
     }
     public void savebuy(View view){
@@ -71,19 +80,27 @@ public class start extends AppCompatActivity {
             moms=0.06;
         else
             moms=0;
-        new Thread(() -> {
-            try {
-                fc.input(MainActivity.ip,
-                        buy_item.getText().toString(),
-                        moms,
-                        Double.parseDouble(buy_price.getText().toString()),
-                        buy_comment.getText().toString(),"UT");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception ex){
 
-            }
-        }).start();
+        if(moms!=0) {
+            Thread thread = new Thread(){
+                public void run(){
+                    try {
+                        fc.input(MainActivity.ip,
+                                buy_item.getText().toString(),
+                                moms,
+                                Double.parseDouble(buy_price.getText().toString()),
+                                buy_comment.getText().toString(), "UT");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
+        }
 
     }
     public void setSpinner(Spinner spinner){

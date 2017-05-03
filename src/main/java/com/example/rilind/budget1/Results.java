@@ -95,15 +95,15 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
             long to_m = date1.getTime();
             */
 
+            SQL sql = new SQL();
+            Thread thread = new Thread(){
+                public void run(){
 
-            new Thread(() -> {
-                try {
-                    SQL sql = new SQL();
                     sql.results(MainActivity.ip,getApplicationContext() , from, to);
-                } catch (Exception ex) {
-
                 }
-            }).start();
+            };
+
+            thread.start();
 
         }else{
             //error message
@@ -159,7 +159,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
-            String[] parts = message.split(",");
+            String[] parts = message.split("-");
             TextView one = (TextView)  findViewById(R.id.one);
             TextView two = (TextView)  findViewById(R.id.two);
             TextView three = (TextView)  findViewById(R.id.three);

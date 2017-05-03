@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     EditText editText;
-    static String ip="";
+    static String ip;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

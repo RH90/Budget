@@ -26,15 +26,19 @@ import java.util.logging.Logger;
     Connection con = null;
     // connect to database
     public Connection connect(String ip) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-        }
-        try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
-            return con;
-        } catch (SQLException ex) {
-            System.out.println("Connection fail");
+        if(!ip.equalsIgnoreCase("0")) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+            }
+            try {
+                Connection con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
+                return con;
+            } catch (SQLException ex) {
+                System.out.println("Connection fail");
+                return null;
+            }
+        }else{
             return null;
         }
     }

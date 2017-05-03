@@ -12,9 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class History extends AppCompatActivity {
-    static String message = "";
-
-    TextView textView = null;
+    String message = "";
     String x = "";
 
     @Override
@@ -46,19 +44,20 @@ public class History extends AppCompatActivity {
 
     public void month(View view) {
         x = "";
-        textView = (TextView) findViewById(R.id.textView);
+        TextView textView = (TextView) findViewById(R.id.textView);
 
         textView.setText("");
 
         //connect to database
-        new Thread(() -> {
-            try {
-                SQL sql = new SQL();
+        SQL sql = new SQL();
+        Thread thread = new Thread(){
+            public void run(){
                 sql.read(MainActivity.ip, getApplicationContext());
-            } catch (Exception ex) {
-
             }
-        }).start();
+        };
+        thread.start();
+
+
 
 
 
