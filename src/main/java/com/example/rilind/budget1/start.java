@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -15,6 +16,12 @@ public class start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        Spinner s1 = (Spinner) findViewById(R.id.buy_moms);
+        Spinner s2 = (Spinner) findViewById(R.id.sell_moms);
+        setSpinner(s1);
+        setSpinner(s2);
+
     }
     public  void savesell(View view){
         SQL fc = new SQL();
@@ -78,6 +85,12 @@ public class start extends AppCompatActivity {
             }
         }).start();
 
+    }
+    public void setSpinner(Spinner spinner){
+        // Application of the Array to the Spinner
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.moms, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     public void results(View view){

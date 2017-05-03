@@ -155,7 +155,7 @@ import java.util.logging.Logger;
             }
             double moms_total = moms_in-moms_ut;
             double vinst= solt_med_moms-kopt_med_moms;
-            s=String.format("%.2f,%.2f,%.2f,%.2f",solt_med_moms,kopt_med_moms,moms_total,vinst);
+            s=String.format("%.2f-%.2f-%.2f-%.2f",solt_med_moms,kopt_med_moms,moms_total,vinst);
             intent.putExtra("message", s);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } catch (SQLException ex) {

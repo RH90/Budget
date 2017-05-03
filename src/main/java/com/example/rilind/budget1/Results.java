@@ -113,7 +113,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     public void setSpinner(String[] array,Spinner spinner){
         Spinner s = spinner;
         // Application of the Array to the Spinner
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item, array);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         s.setAdapter(spinnerArrayAdapter);
     }
