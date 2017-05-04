@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -30,39 +31,54 @@ public class start extends AppCompatActivity {
         //EditText sell_price =(EditText) findViewById(R.id.sell_price);
         EditText sell_price =(EditText) findViewById(R.id.sell_price);
         EditText sell_comment =(EditText) findViewById(R.id.sell_comment);
+        CheckBox checkBox =(CheckBox) findViewById(R.id.checkBox);
         Spinner sell_moms= (Spinner) findViewById(R.id.sell_moms);
         String s = sell_moms.getSelectedItem().toString();
-        double moms;
-        if(s.charAt(0)=='2')
-            moms = 0.25;
-        else if(s.charAt(0)=='1')
-            moms=0.12;
-        else if(s.charAt(0)=='6')
-            moms=0.06;
-        else
-            moms=0;
+        String check="no";
+        if(checkBox.isChecked())
+            check="yes";
+        String item= sell_item.getText().toString();
+        double price;
+        try {
+            price = Double.parseDouble(sell_price.getText().toString());
+            String comment=sell_comment.getText().toString();
+            double moms;
+            if(s.charAt(0)=='2')
+                moms = 0.25;
+            else if(s.charAt(0)=='1')
+                moms=0.12;
+            else if(s.charAt(0)=='6')
+                moms=0.06;
+            else
+                moms=0;
 
-        if(moms!=0) {
-            Thread thread = new Thread(){
-                public void run(){
-                    try {
-                        fc.input(MainActivity.ip,
-                                sell_item.getText().toString(),
-                                moms,
-                                Double.parseDouble(sell_price.getText().toString()),
-                                sell_comment.getText().toString(), "IN");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
+
+            if(moms!=0) {
+                String finalCheck = check;
+                Thread thread = new Thread(){
+                    public void run(){
+                        try {
+                            fc.input(MainActivity.ip, item, moms, price, comment, "IN", finalCheck);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            };
-            thread.start();
+                };
+                thread.start();
+            }
+        }catch (Exception e){
+            //error
         }
 
+
+        sell_item.setText("");
+        sell_price.setText("");
+        sell_comment.setText("");
     }
     public void savebuy(View view){
         SQL fc = new SQL();
@@ -71,7 +87,14 @@ public class start extends AppCompatActivity {
         EditText buy_comment =(EditText) findViewById(R.id.buy_comment);
         Spinner buy_moms= (Spinner) findViewById(R.id.buy_moms);
         String s = buy_moms.getSelectedItem().toString();
+
+        String item= buy_item.getText().toString();
+        double price;
+        try {
+            price = Double.parseDouble(buy_price.getText().toString());
+
         double moms;
+        String comment=buy_comment.getText().toString();
         if(s.charAt(0)=='2')
             moms = 0.25;
         else if(s.charAt(0)=='1')
@@ -85,11 +108,7 @@ public class start extends AppCompatActivity {
             Thread thread = new Thread(){
                 public void run(){
                     try {
-                        fc.input(MainActivity.ip,
-                                buy_item.getText().toString(),
-                                moms,
-                                Double.parseDouble(buy_price.getText().toString()),
-                                buy_comment.getText().toString(), "UT");
+                        fc.input(MainActivity.ip,item,moms,price, comment, "UT" ,"no");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
@@ -101,7 +120,13 @@ public class start extends AppCompatActivity {
             };
             thread.start();
         }
+        }catch (Exception e){
+            //error
+        }
 
+        buy_item.setText("");
+        buy_price.setText("");
+        buy_comment.setText("");
     }
     public void setSpinner(Spinner spinner){
         // Application of the Array to the Spinner

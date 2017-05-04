@@ -26,28 +26,26 @@ import java.util.logging.Logger;
     Connection con = null;
     // connect to database
     public Connection connect(String ip) {
-        if(!ip.equalsIgnoreCase("0")) {
+
             try {
                 Class.forName("com.mysql.jdbc.Driver");
             } catch (ClassNotFoundException e) {
             }
             try {
-                Connection con = DriverManager.getConnection("jdbc:mysql://" + ip + ":3306/mydb", "RH9011", "RH9011");
+                Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "RH9011", "RH9011");
                 return con;
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 System.out.println("Connection fail");
                 return null;
             }
-        }else{
-            return null;
-        }
+
     }
     // input data to database
-    public void input(String ip, String Item, double moms, double price, String comment,String type) throws SQLException, ClassNotFoundException, IOException {
+    public void input(String ip, String Item, double moms, double price, String comment,String type,String used) throws SQLException, ClassNotFoundException, IOException {
         try {
             con = connect(ip);
             stmt = con.createStatement();
-            String query = "INSERT INTO Budget (Item,Moms,Price,Comment,Date,IN_UT) VALUES ('" + Item + "', " +moms + "," + price  + ",'" + comment + "',CURDATE(),'"+type+"');";
+            String query = "INSERT INTO Budget (Item,Moms,Price,Comment,Date,IN_UT,used) VALUES ('" + Item + "', " +moms + "," + price  + ",'" + comment + "',CURDATE(),'"+type+"','"+used+"');";
             stmt.executeUpdate(query);
 
         } catch (Exception ex) {
@@ -63,7 +61,6 @@ import java.util.logging.Logger;
                 if (con != null) {
                     con.close();
                 }
-
             } catch (Exception ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -150,10 +147,14 @@ import java.util.logging.Logger;
             double kopt_med_moms=0;
             while (rs.next()) {//get first result
                 if(rs.getString(7).endsWith("UT")) {
+
                     moms_ut += Double.parseDouble(rs.getString(3)) * Double.parseDouble(rs.getString(4));
                     kopt_med_moms+=Double.parseDouble(rs.getString(4))+moms_ut;
                 }else {
-                    moms_in += Double.parseDouble(rs.getString(3)) * Double.parseDouble(rs.getString(4));
+                    if(rs.getString(8).equalsIgnoreCase("no"))
+                        moms_in += Double.parseDouble(rs.getString(3)) * Double.parseDouble(rs.getString(4));
+                    else
+                        moms_in += Double.parseDouble(rs.getString(3)) * (Double.parseDouble(rs.getString(4))*0.8);
                     solt_med_moms+=Double.parseDouble(rs.getString(4)) +moms_in;
                 }
             }
