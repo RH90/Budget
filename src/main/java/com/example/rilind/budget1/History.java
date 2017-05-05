@@ -11,6 +11,15 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Scanner;
+import java.util.Stack;
+
 public class History extends AppCompatActivity {
     String message = "";
     String x = "";
@@ -42,13 +51,14 @@ public class History extends AppCompatActivity {
         textView.setText(x);
     }
 
-    public void month(View view) {
+    public void month(View view) throws IOException, ClassNotFoundException {
         x = "";
         TextView textView = (TextView) findViewById(R.id.textView);
 
         textView.setText("");
 
         //connect to database
+        /*
         SQL sql = new SQL();
         Thread thread = new Thread(){
             public void run(){
@@ -56,6 +66,30 @@ public class History extends AppCompatActivity {
             }
         };
         thread.start();
+        */
+        File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
+        if(!file.exists())
+            file.createNewFile();
+        Scanner sc = new Scanner(openFileInput(file.getName()));
+
+        Stack<String[]> stack = new Stack<>();
+        while(sc.hasNextLine()){
+            stack.push(sc.nextLine().split("¤¤"));
+        }
+
+         String s="";
+        s = String.format("%-10s|%4s|%7s|%-13s|%-10s\n", "Item", "Moms", "Price", "Comment","Date");
+        s = s+ "------------------------------------------------\n";
+        while (!stack.empty()) {//get first result
+            String[] parts=stack.pop();
+
+            if(parts[6].endsWith("UT"))
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", parts[1], parts[2], "-"+parts[3], parts[4], parts[5]);
+            else
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", parts[1], parts[2], parts[3], parts[4], parts[5]);
+        }
+        TextView textView1 =(TextView) findViewById(R.id.textView);
+        textView1.setText(s);
 
 
 

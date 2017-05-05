@@ -38,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        Intent intent = new Intent(this, start.class);
+        startActivity(intent);
 
 
     }
+
     // go to start window
     public void start(View view){
         Intent intent = new Intent(this, start.class);

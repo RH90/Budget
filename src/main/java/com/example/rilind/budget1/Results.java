@@ -13,10 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Results extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     static Spinner month_f ;
@@ -82,19 +85,67 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     }
 
 
-    public void results(View view) throws ParseException {
+    public void results(View view) throws ParseException, IOException {
         if(month_f.getSelectedItemPosition()!=0&&year_f.getSelectedItemPosition()!=0&&day_f.getSelectedItemPosition()!=0
                 &&month_t.getSelectedItemPosition()!=0&&day_t.getSelectedItemPosition()!=0&&year_t.getSelectedItemPosition()!=0) {
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String from = year_f.getSelectedItem().toString()+"-"+month_f.getSelectedItemPosition()+"-"+day_f.getSelectedItemPosition();
             String to = year_t.getSelectedItem().toString()+"-"+month_t.getSelectedItemPosition()+"-"+day_t.getSelectedItemPosition();
-            /*
-            Date date = sdf.parse(from);
-            Date date1 = sdf.parse(to);
-            long from_m = date.getTime();
-            long to_m = date1.getTime();
-            */
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date_f = sdf.parse(from);
+            Date date_t = sdf.parse(to);
+            long f = date_f.getTime();
+            long t = date_t.getTime();
+
+
+            File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
+            if(!file.exists())
+                file.createNewFile();
+            Scanner sc = new Scanner(openFileInput(file.getName()));
+
+            double moms_ut=0;
+            double kopt_med_moms=0;
+            double moms_in=0;
+            double solt_med_moms=0;
+            while(sc.hasNextLine()){
+                String[] d = sc.nextLine().split("¤¤");
+                Date now = sdf.parse(d[5]);
+                System.out.println(d[5]);
+                long n = now.getTime();
+                if(n>=f&&n<=t){
+                    if(d[6].endsWith("UT")) {
+                        moms_ut += Double.parseDouble(d[2]) * Double.parseDouble(d[3]);
+                        kopt_med_moms+=Double.parseDouble(d[3])+moms_ut;
+                    }else {
+                        if(d[7].equalsIgnoreCase("no"))
+                            moms_in += Double.parseDouble(d[2]) * Double.parseDouble(d[3]);
+                        else
+                            moms_in += Double.parseDouble(d[2]) * (Double.parseDouble(d[3])*0.8);
+                        solt_med_moms+=Double.parseDouble(d[3]) +moms_in;
+                    }
+
+
+                }
+
+            }
+            sc.close();
+            TextView one = (TextView)  findViewById(R.id.one);
+            TextView two = (TextView)  findViewById(R.id.two);
+            TextView three = (TextView)  findViewById(R.id.three);
+            TextView four = (TextView)  findViewById(R.id.four);
+            String sf = String.format("%.2f",solt_med_moms);
+            one.setText(sf);
+            sf = String.format("%.2f",kopt_med_moms);
+            two.setText(sf);
+            sf = String.format("%.2f",moms_in-moms_ut);
+            three.setText(sf);
+            sf = String.format("%.2f",solt_med_moms-kopt_med_moms);
+            four.setText(sf);
+
+
+
+
+            /*
             SQL sql = new SQL();
             Thread thread = new Thread(){
                 public void run(){
@@ -104,10 +155,12 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
             };
 
             thread.start();
+            */
 
         }else{
             //error message
         }
+
 
     }
     public void setSpinner(String[] array,Spinner spinner){
