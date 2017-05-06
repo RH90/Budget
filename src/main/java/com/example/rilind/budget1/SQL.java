@@ -2,6 +2,8 @@ package com.example.rilind.budget1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
 import junit.runner.Version;
@@ -20,12 +22,15 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Rilind on 2017-04-07.
  */
     public class SQL {
 
     Intent intent = new Intent("event");
+    Intent intent1 = new Intent("event1");
     Statement stmt = null;
     ResultSet rs = null;
     Connection con = null;
@@ -35,8 +40,8 @@ import java.util.logging.Logger;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
             } catch (ClassNotFoundException e) {
-            }
-            try {
+
+            }try {
                 Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "RH9011", "RH9011");
                 return con;
             } catch (Exception ex) {
@@ -51,25 +56,25 @@ import java.util.logging.Logger;
         try {
             int index =index(ip,context);
             System.out.println(index);
-            File file = new File(context.getFilesDir(),"hello.txt");
-            if(!file.exists())
-                file.createNewFile();
-            Scanner sc = new Scanner(context.openFileInput(file.getName()));
             con = connect(ip);
             stmt = con.createStatement();
 
+            SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+            Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
+
             String query="";
-            while(sc.hasNextLine()){
-                String[] parts =sc.nextLine().split("¤¤");
-                String s=parts[0];
-                int i= Integer.parseInt(s);
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                int i= c.getInt(0);
                 if(index<i||index==0){
-                   query = "INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES ("+parts[0]+",'" + parts[1] + "', " +parts[2] + "," + parts[3]  + ",'" + parts[4] + "','"+parts[5]+"','"+parts[6]+"','"+parts[7]+"');";
-                   stmt.addBatch(query);
+                   query = "INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
+                           "("+c.getInt(0)+",'"+c.getString(1)+"',"+c.getString(2) + ","+c.getString(3)+ ",'" +c.getString(4)+ "','"+c.getString(5)+"','"+c.getString(6)+"','"+c.getString(7)+"');";
+                    stmt.addBatch(query);
                 }
+                c.moveToNext();
             }
-            sc.close();
-            System.out.println(query);
 
             stmt.executeBatch();
             if(query.equalsIgnoreCase(""))
@@ -77,19 +82,12 @@ import java.util.logging.Logger;
             else
                 color="1";
 
-
-          //
-           //
-
-
-
         } catch (Exception ex) {
             System.out.println("Login fail1");
         } finally {
             try {
-
-                intent.putExtra("message", color);
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                intent1.putExtra("message", color);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
                 if (rs != null) {
                     rs.close();
                 }
@@ -122,8 +120,8 @@ import java.util.logging.Logger;
 
 
         } catch (Exception ex) {
-            intent.putExtra("message", "0");
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            intent1.putExtra("message", "0");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
             System.out.println("Login fail");
         } finally {
             try {
@@ -158,26 +156,6 @@ import java.util.logging.Logger;
             String s;
             s = String.format("%-10s|%4s|%5s|%-13s|%-10s\n----------------------------------------------\n", columns.getColumnName(2), columns.getColumnName(3), columns.getColumnName(4), columns.getColumnName(5), columns.getColumnName(6));
 
-
-            //}
-
-            /*
-            int a = 0, b = 0, c = 0, d = 0;
-            while (rs.next()) {
-                if (rs.getString(1).length() > a) {
-                    a = rs.getString(1).length();
-                }
-                if (rs.getString(2).length() > b) {
-                    b = rs.getString(2).length();
-                }
-                if (rs.getString(3).length() > c) {
-                    c = rs.getString(3).length();
-                }
-                if (rs.getString(4).length() > d) {
-                    d = rs.getString(4).length();
-                }
-            }
-            */
             rs.afterLast();
             while (rs.previous()) {//get first result
                 if(rs.getString(7).endsWith("UT"))

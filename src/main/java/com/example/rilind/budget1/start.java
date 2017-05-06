@@ -4,7 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +35,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -40,7 +45,7 @@ public class start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("event"));
+                new IntentFilter("event1"));
         setContentView(R.layout.activity_start);
 
         Spinner s1 = (Spinner) findViewById(R.id.buy_moms);
@@ -51,7 +56,6 @@ public class start extends AppCompatActivity {
     }
     public  void savesell(View view){
         EditText sell_item =(EditText) findViewById(R.id.sell_item);
-        //EditText sell_price =(EditText) findViewById(R.id.sell_price);
         EditText sell_price =(EditText) findViewById(R.id.sell_price);
         EditText sell_comment =(EditText) findViewById(R.id.sell_comment);
         CheckBox checkBox =(CheckBox) findViewById(R.id.checkBox);
@@ -74,49 +78,24 @@ public class start extends AppCompatActivity {
                 moms=0.06;
             else
                 moms=0;
-
-
-
             if(moms!=0) {
                 String finalCheck = check;
-
-                File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-                if(!file.exists())
-                 file.createNewFile();
-                Scanner sc = new Scanner(new FileInputStream(file));
-                int index=0;
-                while(sc.hasNext()){
-                    sc.nextLine();
-                    index++;
+                SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+                myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                        "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+                Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
+                System.out.println(c.getCount());
+                int i=0;
+                if(c.getCount()!=0) {
+                    c.moveToLast();
+                    System.out.println(c.getInt(0));
+                    i=c.getInt(0)+1;
                 }
-                sc.close();
-
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
                 String d=sdf.format(date);
-                file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-                PrintWriter fw = new PrintWriter(openFileOutput(file.getName(), MODE_APPEND ));
-                fw.append(index+"¤¤"+ item+"¤¤"+moms+"¤¤"+ price+"¤¤"+comment+"¤¤"+d+"¤¤"+"IN"+"¤¤"+ finalCheck+"\n");
-
-                fw.close();
-
-                /*
-                Thread thread = new Thread(){
-                    public void run(){
-                        try {
-                            fc.input(MainActivity.ip, item, moms, price, comment, "IN", finalCheck);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                thread.start();
-                */
-
+                myDB.execSQL("INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
+                        "VALUES ("+i+",'"+item+"',"+moms+","+price+",'"+comment+"','"+d+"','IN','"+finalCheck+"');");
             }
         }catch (Exception e){
             //error
@@ -151,42 +130,25 @@ public class start extends AppCompatActivity {
             moms=0;
 
         if(moms!=0) {
+            SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
 
-            File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-            if(!file.exists())
-                file.createNewFile();
-            Scanner sc = new Scanner(new FileInputStream(file));
-            int index=0;
-            while(sc.hasNext()){
-                sc.nextLine();
-                index++;
+            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+
+            //ArrayList<Item> al =new ArrayList<>();
+            Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
+            System.out.println(c.getCount());
+            int i=0;
+            if(c.getCount()!=0) {
+                c.moveToLast();
+                System.out.println(c.getInt(0));
+                i=c.getInt(0)+1;
             }
-            System.out.println(index);
-            sc.close();
-            file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-            PrintWriter fw = new PrintWriter(openFileOutput(file.getName(), MODE_APPEND ));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String d=sdf.format(date);
-           fw.append(index+"¤¤"+ item+"¤¤"+moms+"¤¤"+ price+"¤¤"+comment+"¤¤"+d+"¤¤"+"UT"+"¤¤"+ "no"+"\n");
-            fw.close();
-
-            /*
-            Thread thread = new Thread(){
-                public void run(){
-                    try {
-                        fc.input(MainActivity.ip,item,moms,price, comment, "UT" ,"no");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            thread.start();
-            */
+            myDB.execSQL("INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
+                    "VALUES ("+i+",'"+item+"',"+moms+","+price+",'"+comment+"','"+d+"','UT','no');");
         }
         }catch (Exception e){
             //error
@@ -197,6 +159,9 @@ public class start extends AppCompatActivity {
         buy_comment.setText("");
     }
     public void sync(View view){
+        Button b =(Button) findViewById(R.id.button8);
+        b.setBackgroundColor(Color.LTGRAY);
+
         SQL fc = new SQL();
         Thread thread = new Thread(){
             public void run(){

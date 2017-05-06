@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,36 +59,19 @@ public class History extends AppCompatActivity {
 
         textView.setText("");
 
-        //connect to database
-        /*
-        SQL sql = new SQL();
-        Thread thread = new Thread(){
-            public void run(){
-                sql.read(MainActivity.ip, getApplicationContext());
-            }
-        };
-        thread.start();
-        */
-        File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-        if(!file.exists())
-            file.createNewFile();
-        Scanner sc = new Scanner(openFileInput(file.getName()));
-
-        Stack<String[]> stack = new Stack<>();
-        while(sc.hasNextLine()){
-            stack.push(sc.nextLine().split("¤¤"));
-        }
+        SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+        Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
+        c.moveToLast();
 
          String s="";
         s = String.format("%-10s|%4s|%7s|%-13s|%-10s\n", "Item", "Moms", "Price", "Comment","Date");
         s = s+ "------------------------------------------------\n";
-        while (!stack.empty()) {//get first result
-            String[] parts=stack.pop();
-
-            if(parts[6].endsWith("UT"))
-                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", parts[1], parts[2], "-"+parts[3], parts[4], parts[5]);
+        while(!c.isBeforeFirst()){
+            if(c.getString(6).endsWith("UT"))
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n",c.getString(1), c.getString(2), "-"+c.getString(3), c.getString(4), c.getString(5));
             else
-                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", parts[1], parts[2], parts[3], parts[4], parts[5]);
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5));
+            c.moveToPrevious();
         }
         TextView textView1 =(TextView) findViewById(R.id.textView);
         textView1.setText(s);

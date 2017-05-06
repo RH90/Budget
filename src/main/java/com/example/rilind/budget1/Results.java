@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,8 +34,6 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("event"));
         setContentView(R.layout.activity_results);
         // Array of choices
         String months[] = {"Month","Januari","Februari","Mars","April","Maj", "Juni","Juli","Agusti","September","Oktober","November","December"};
@@ -94,45 +94,39 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date_f = sdf.parse(from);
             Date date_t = sdf.parse(to);
-            long f = date_f.getTime();
-            long t = date_t.getTime();
 
+            SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
 
-            File file = new File(getApplicationContext().getFilesDir(), "hello.txt");
-            if(!file.exists())
-                file.createNewFile();
-            Scanner sc = new Scanner(openFileInput(file.getName()));
-
+            Cursor c = myDB.rawQuery("SELECT * FROM Budget where date between \""+sdf.format(date_f)+"\" and \""+sdf.format(date_t)+"\" ", null);
             double moms_ut=0;
             double kopt_med_moms=0;
             double moms_in=0;
             double solt_med_moms=0;
-            while(sc.hasNextLine()){
-                String[] d = sc.nextLine().split("¤¤");
-                Date now = sdf.parse(d[5]);
-                System.out.println(d[5]);
-                long n = now.getTime();
-                if(n>=f&&n<=t){
-                    if(d[6].endsWith("UT")) {
-                        moms_ut += Double.parseDouble(d[2]) * Double.parseDouble(d[3]);
-                        kopt_med_moms+=Double.parseDouble(d[3])+moms_ut;
+            c.moveToFirst();
+            System.out.println(c.getCount());
+            System.out.println(c.isAfterLast());
+            while(!c.isAfterLast()){
+                System.out.println(c.getString(6));
+                    if(c.getString(6).endsWith("UT")) {
+                        moms_ut += c.getDouble(2) * c.getDouble(3);
+                        kopt_med_moms+=c.getDouble(3)+moms_ut;
                     }else {
-                        if(d[7].equalsIgnoreCase("no"))
-                            moms_in += Double.parseDouble(d[2]) * Double.parseDouble(d[3]);
+                        if(c.getString(7).equalsIgnoreCase("no"))
+                            moms_in += c.getDouble(2) * c.getDouble(3);
                         else
-                            moms_in += Double.parseDouble(d[2]) * (Double.parseDouble(d[3])*0.8);
-                        solt_med_moms+=Double.parseDouble(d[3]) +moms_in;
+                            moms_in += c.getDouble(2) * c.getDouble(3)*0.8;
+                           solt_med_moms+=c.getDouble(3) +moms_in;
                     }
-
-
+                c.moveToNext();
                 }
 
-            }
-            sc.close();
             TextView one = (TextView)  findViewById(R.id.one);
             TextView two = (TextView)  findViewById(R.id.two);
             TextView three = (TextView)  findViewById(R.id.three);
             TextView four = (TextView)  findViewById(R.id.four);
+
             String sf = String.format("%.2f",solt_med_moms);
             one.setText(sf);
             sf = String.format("%.2f",kopt_med_moms);
@@ -141,21 +135,6 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
             three.setText(sf);
             sf = String.format("%.2f",solt_med_moms-kopt_med_moms);
             four.setText(sf);
-
-
-
-
-            /*
-            SQL sql = new SQL();
-            Thread thread = new Thread(){
-                public void run(){
-
-                    sql.results(MainActivity.ip,getApplicationContext() , from, to);
-                }
-            };
-
-            thread.start();
-            */
 
         }else{
             //error message
@@ -207,23 +186,5 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String message = intent.getStringExtra("message");
-            String[] parts = message.split("-");
-            TextView one = (TextView)  findViewById(R.id.one);
-            TextView two = (TextView)  findViewById(R.id.two);
-            TextView three = (TextView)  findViewById(R.id.three);
-            TextView four = (TextView)  findViewById(R.id.four);
 
-            one.setText(parts[0]);
-            two.setText(parts[1]);
-            three.setText(parts[2]);
-            four.setText(parts[3]);
-            System.out.println(message);
-
-        }
-    };
 }
