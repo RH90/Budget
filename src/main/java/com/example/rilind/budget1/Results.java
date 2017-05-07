@@ -1,12 +1,7 @@
 package com.example.rilind.budget1;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,14 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
 
 public class Results extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     static Spinner month_f ;
@@ -86,8 +78,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
 
 
     public void results(View view) throws ParseException, IOException {
-        if(month_f.getSelectedItemPosition()!=0&&year_f.getSelectedItemPosition()!=0&&day_f.getSelectedItemPosition()!=0
-                &&month_t.getSelectedItemPosition()!=0&&day_t.getSelectedItemPosition()!=0&&year_t.getSelectedItemPosition()!=0) {
+        if(year_t.getSelectedItemPosition()!=0&&year_f.getSelectedItemPosition()!=0) {
             String from = year_f.getSelectedItem().toString()+"-"+month_f.getSelectedItemPosition()+"-"+day_f.getSelectedItemPosition();
             String to = year_t.getSelectedItem().toString()+"-"+month_t.getSelectedItemPosition()+"-"+day_t.getSelectedItemPosition();
 

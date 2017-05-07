@@ -12,15 +12,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Scanner;
-import java.util.Stack;
 
 public class History extends AppCompatActivity {
     String message = "";
