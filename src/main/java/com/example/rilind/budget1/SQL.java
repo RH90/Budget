@@ -38,7 +38,6 @@ public class SQL {
 
         }
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "RH9011", "RH9011");
             return con;
         } catch (Exception ex) {
             System.out.println("Connection fail");
