@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -30,7 +29,7 @@ public class SQL {
     Connection con = null;
 
     // connect to database
-    public Connection connect(String ip) {
+    public Connection connect() {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -38,6 +37,7 @@ public class SQL {
 
         }
         try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "root", "root");
             return con;
         } catch (Exception ex) {
             System.out.println("Connection fail");
@@ -47,12 +47,12 @@ public class SQL {
     }
 
     // input data to database
-    public void input(String ip, Context context) throws SQLException, ClassNotFoundException, IOException {
+    public void input( Context context) throws SQLException, ClassNotFoundException, IOException {
         String color = "0";
         try {
             //checks how many items there are inside the remote database, so we know how many item we should send to it.
-            int index = index(ip, context);
-            con = connect(ip);
+            int index = index(context);
+            con = connect();
             stmt = con.createStatement();
             //get data from local database
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
@@ -104,10 +104,10 @@ public class SQL {
     }
 
     //get the amount of items in remote database
-    public int index(String ip, Context context) {
+    public int index(Context context) {
         int index = 0;
         try {
-            con = connect(ip);
+            con = connect();
 
             stmt = con.createStatement();
             String query = "select * from budget";

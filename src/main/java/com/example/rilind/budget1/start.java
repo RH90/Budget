@@ -131,7 +131,7 @@ public class start extends AppCompatActivity implements CompoundButton.OnChecked
         Thread thread = new Thread() {
             public void run() {
                 try {
-                    fc.input(MainActivity.ip, getApplicationContext());
+                    fc.input(getApplicationContext());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
