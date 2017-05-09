@@ -23,63 +23,69 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by Rilind on 2017-04-07.
  */
-    public class SQL {
+public class SQL {
     Intent intent1 = new Intent("event1");
     Statement stmt = null;
     ResultSet rs = null;
     Connection con = null;
+
     // connect to database
     public Connection connect(String ip) {
 
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
 
-            }try {
-                Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "RH9011", "RH9011");
-                return con;
-            } catch (Exception ex) {
-                System.out.println("Connection fail");
-                return null;
-            }
+        }
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "RH9011", "RH9011");
+            return con;
+        } catch (Exception ex) {
+            System.out.println("Connection fail");
+            return null;
+        }
 
     }
+
     // input data to database
-    public void input(String ip,Context context) throws SQLException, ClassNotFoundException, IOException {
-        String color="0";
+    public void input(String ip, Context context) throws SQLException, ClassNotFoundException, IOException {
+        String color = "0";
         try {
-            int index =index(ip,context);
-            System.out.println(index);
+            //checks how many items there are inside the remote database, so we know how many item we should send to it.
+            int index = index(ip, context);
             con = connect(ip);
             stmt = con.createStatement();
-
+            //get data from local database
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
             myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                     "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
             Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
 
-            String query="";
+            String query = "";
             c.moveToFirst();
-            while(!c.isAfterLast()){
-                int i= c.getInt(0);
-                if(index<i||index==0){
-                   query = "INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
-                           "("+c.getInt(0)+",'"+c.getString(1)+"',"+c.getString(2) + ","+c.getString(3)+ ",'" +c.getString(4)+ "','"+c.getString(5)+"','"+c.getString(6)+"','"+c.getString(7)+"');";
+            //store the items to a batch
+            while (!c.isAfterLast()) {
+                int i = c.getInt(0);
+                if (index < i || index == 0) {
+                    query = "INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
+                            "(" + c.getInt(0) + ",'" + c.getString(1) + "'," + c.getString(2) + "," + c.getString(3) + ",'" + c.getString(4) + "','" + c.getString(5) + "','" + c.getString(6) + "','" + c.getString(7) + "');";
                     stmt.addBatch(query);
                 }
                 c.moveToNext();
             }
-
+            //execute all the statements that where stored in the batch
             stmt.executeBatch();
-            if(query.equalsIgnoreCase(""))
-                color="2";
+            //if the remote database is up to date then make the sync button yellow, else make it green
+            if (query.equalsIgnoreCase(""))
+                color = "2";
             else
-                color="1";
+                color = "1";
 
         } catch (Exception ex) {
             System.out.println("Login fail1");
         } finally {
             try {
+                //change the sync button color
                 intent1.putExtra("message", color);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
                 if (rs != null) {
@@ -97,23 +103,24 @@ import static android.content.Context.MODE_PRIVATE;
             }
         }
     }
-    public int index(String ip,Context context){
-        int index =0;
+
+    //get the amount of items in remote database
+    public int index(String ip, Context context) {
+        int index = 0;
         try {
             con = connect(ip);
 
             stmt = con.createStatement();
             String query = "select * from budget";
             rs = stmt.executeQuery(query);
-            ResultSetMetaData columns = rs.getMetaData();
-
+            //ResultSetMetaData columns = rs.getMetaData();
+            //get the index of the last item
             rs.afterLast();
-            if(rs.previous())
-                index=Integer.parseInt(rs.getString(1));
-
-
+            if (rs.previous())
+                index = Integer.parseInt(rs.getString(1));
 
         } catch (Exception ex) {
+            //if it cannot connect to database then change the button color to red
             intent1.putExtra("message", "0");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
             System.out.println("Login fail");
@@ -129,7 +136,6 @@ import static android.content.Context.MODE_PRIVATE;
                 if (con != null) {
                     con.close();
                 }
-
 
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(Version.class.getName());
