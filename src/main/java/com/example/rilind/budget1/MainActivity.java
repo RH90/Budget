@@ -18,14 +18,10 @@ import android.widget.TextView;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    EditText editText;
-    static String ip="0";
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -41,14 +37,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
-    // go to start window
-    public void start(View view){
-
-    }
 
 
      //set ip address

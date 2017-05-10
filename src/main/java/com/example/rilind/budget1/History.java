@@ -22,7 +22,6 @@ import android.widget.TextView;
 import java.io.IOException;
 
 public class History extends Fragment implements View.OnClickListener {
-    String message = "";
     String x = "";
     View v;
     @Override
