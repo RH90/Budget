@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,22 +40,34 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        Intent intent = new Intent(this, start.class);
-        startActivity(intent);
+
 
 
     }
 
     // go to start window
     public void start(View view){
-        Intent intent = new Intent(this, start.class);
-        startActivity(intent);
+
     }
 
+
      //set ip address
-    public void send(View view) throws IOException {
-        editText = (EditText) findViewById(R.id.editText);
-        ip=editText.getText().toString();
+    public void login(View view) throws IOException {
+        EditText user = (EditText) findViewById(R.id.editText2);
+        EditText pass = (EditText) findViewById(R.id.editText3);
+        System.out.println(user.getText());
+        System.out.println(pass.getText());
+
+        if(user.getText().toString().equals("Ahmed")&&pass.getText().toString().equals("2017")) {
+            System.out.println("yes");
+            Intent intent = new Intent(this, start.class);
+            startActivity(intent);
+        }else {
+            TextView error = (TextView) findViewById(R.id.errorM);
+            error.setText("Login fail");
+        }
+
+
     }
 
 
