@@ -1,12 +1,19 @@
 package com.example.rilind.budget1;
 
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Results extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class Results extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     Spinner month_f;
     Spinner month_t;
     Spinner year_t;
@@ -24,22 +31,31 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     Spinner day_t;
     Spinner day_f;
 
+    View v;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_results, container, false);
+
+        return rootView;
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
+        v= getView();
         // Array of months for the month spinners
         String months[] = {"Month", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Agusti", "September", "Oktober", "November", "December"};
 
-        month_f = (Spinner) findViewById(R.id.month_f);
-        month_t = (Spinner) findViewById(R.id.month_t);
-        year_t = (Spinner) findViewById(R.id.year_t);
-        year_f = (Spinner) findViewById(R.id.year_f);
-        day_t = (Spinner) findViewById(R.id.day_t);
-        day_f = (Spinner) findViewById(R.id.day_f);
+        month_f = (Spinner) v.findViewById(R.id.month_f);
+        month_t = (Spinner) v.findViewById(R.id.month_t);
+        year_t = (Spinner) v.findViewById(R.id.year_t);
+        year_f = (Spinner) v.findViewById(R.id.year_f);
+        day_t = (Spinner) v.findViewById(R.id.day_t);
+        day_f = (Spinner) v.findViewById(R.id.day_f);
 
         setSpinner(months, month_f);
         setSpinner(months, month_t);
+        Button sync = (Button) v.findViewById(R.id.button6);
+        sync.setOnClickListener(this);
 
         int y;
         //get current year
@@ -60,6 +76,8 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
         month_f.setOnItemSelectedListener(this);
         month_t.setOnItemSelectedListener(this);
 
+
+
     }
 
     //changes the amount of days in the days spinners
@@ -73,7 +91,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     }
 
     //prints out the results for a time interval when the results button is pressed
-    public void results(View view) throws ParseException, IOException {
+    public void results() throws ParseException, IOException {
         //you can only show results if you first give the year interval
         if (year_t.getSelectedItemPosition() != 0 && year_f.getSelectedItemPosition() != 0) {
             //get date and save it as in the format of "YYYY-MM-DD"
@@ -83,7 +101,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
             Date date_f = sdf.parse(from);
             Date date_t = sdf.parse(to);
             //open database file
-            SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+            SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
             myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                     "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
 
@@ -112,10 +130,10 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
                 c.moveToNext();
             }
             //write out the results on the textfields
-            TextView one = (TextView) findViewById(R.id.one);
-            TextView two = (TextView) findViewById(R.id.two);
-            TextView three = (TextView) findViewById(R.id.three);
-            TextView four = (TextView) findViewById(R.id.four);
+            TextView one = (TextView) v.findViewById(R.id.one);
+            TextView two = (TextView) v.findViewById(R.id.two);
+            TextView three = (TextView) v.findViewById(R.id.three);
+            TextView four = (TextView) v.findViewById(R.id.four);
             String sf = String.format("%.2f", solt_med_moms);
             one.setText(sf);
             sf = String.format("%.2f", kopt_med_moms);
@@ -133,7 +151,7 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
     //writes out the text on the spinners
     public void setSpinner(String[] array, Spinner spinner) {
         Spinner s = spinner;
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, array);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, array);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         s.setAdapter(spinnerArrayAdapter);
     }
@@ -180,4 +198,14 @@ public class Results extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
+    @Override
+    public void onClick(View view) {
+        try {
+            results();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

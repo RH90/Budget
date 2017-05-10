@@ -6,28 +6,40 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.IOException;
 
-public class History extends AppCompatActivity {
+public class History extends Fragment implements View.OnClickListener {
     String message = "";
     String x = "";
+    View v;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_history, container, false);
+
+        return rootView;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            x = savedInstanceState.getString("x");
-        }
-        setContentView(R.layout.activity_history);
+        v= getView();
+        Button b = (Button) v.findViewById(R.id.month1);
+        b.setOnClickListener(this);
         start();
+
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -39,19 +51,19 @@ public class History extends AppCompatActivity {
 
     // reloads the textfield when rotating
     public void start() {
-        TextView textView = (TextView) findViewById(R.id.textView);
+        TextView textView = (TextView) v.findViewById(R.id.textView);
         textView.setMovementMethod(new ScrollingMovementMethod());
         textView.setText(x);
     }
 
     //go here when the 1 month button is pressed
     //prints out the transactions from now to 1 month
-    public void month(View view) throws IOException, ClassNotFoundException {
+    public void month() throws IOException, ClassNotFoundException {
         x = "";
-        TextView textView = (TextView) findViewById(R.id.textView);
+        TextView textView = (TextView) v.findViewById(R.id.textView);
         textView.setText("");
         //open the database file
-        SQLiteDatabase myDB = this.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+        SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
         //get data from database
         Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
         //moves to the last item so we get the newest item first
@@ -70,7 +82,7 @@ public class History extends AppCompatActivity {
             c.moveToPrevious();
         }
         //output to Textview
-        TextView textView1 = (TextView) findViewById(R.id.textView);
+        TextView textView1 = (TextView) v.findViewById(R.id.textView);
         textView1.setText(s);
 
         //Spannable wordtoSpan = new SpannableString(message);
@@ -81,4 +93,14 @@ public class History extends AppCompatActivity {
         //textView.setText(wordtoSpan);
     }
 
+    @Override
+    public void onClick(View view) {
+        try {
+            month();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }

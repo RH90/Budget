@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(user.getText().toString().equals("Ahmed")&&pass.getText().toString().equals("2017")) {
             System.out.println("yes");
-            Intent intent = new Intent(this, start.class);
+            Intent intent = new Intent(this, TabActivity.class);
             startActivity(intent);
         }else {
             TextView error = (TextView) findViewById(R.id.errorM);
