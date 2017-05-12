@@ -98,11 +98,8 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             Date date_t = sdf.parse(to);
             //open database file
             SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
-            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
-                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
-
             //retrieve only the items in the given time interval
-            Cursor c = myDB.rawQuery("SELECT * FROM Budget where date between \"" + sdf.format(date_f) + "\" and \"" + sdf.format(date_t) + "\" ", null);
+            Cursor c = myDB.rawQuery("SELECT * FROM "+MainActivity.username+" where date between \"" + sdf.format(date_f) + "\" and \"" + sdf.format(date_t) + "\" ", null);
 
             double moms_ut = 0;
             double kopt_med_moms = 0;
@@ -113,18 +110,19 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             while (!c.isAfterLast()) {
                 //if the item is a expense then: total_VAT_expense += item * item_VAT
                 if (c.getString(6).endsWith("UT")) {
-                    moms_ut += c.getDouble(2) * c.getDouble(3);
-                    kopt_med_moms += c.getDouble(3) + moms_ut;
+                    moms_ut += c.getDouble(3)- c.getDouble(3)/(1+c.getDouble(2));
+                    kopt_med_moms += c.getDouble(3);
                 } else {
                     if (c.getString(7).equalsIgnoreCase("no"))
-                        moms_in += c.getDouble(2) * c.getDouble(3);
+                        moms_in +=  c.getDouble(3)- c.getDouble(3)/(1+c.getDouble(2));
                         //if the item is a sold item and is used then: total_revenue_VAT += item * item_vat * 80%
                     else
-                        moms_in += c.getDouble(2) * c.getDouble(3) * 0.8;
-                    solt_med_moms += c.getDouble(3) + moms_in;
+                        moms_in += c.getDouble(3)- c.getDouble(3)/(1+(c.getDouble(2)*0.8));
+                    solt_med_moms += c.getDouble(3) ;
                 }
                 c.moveToNext();
             }
+            double moms_total=-(moms_in - moms_ut);
             //write out the results on the textfields
             TextView one = (TextView) v.findViewById(R.id.one);
             TextView two = (TextView) v.findViewById(R.id.two);
@@ -132,11 +130,11 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             TextView four = (TextView) v.findViewById(R.id.four);
             String sf = String.format("%.2f", solt_med_moms);
             one.setText(sf);
-            sf = String.format("%.2f", kopt_med_moms);
+            sf = String.format("%.2f", -kopt_med_moms);
             two.setText(sf);
-            sf = String.format("%.2f", moms_in - moms_ut);
+            sf = String.format("%.2f", moms_total);
             three.setText(sf);
-            sf = String.format("%.2f", solt_med_moms - kopt_med_moms);
+            sf = String.format("%.2f", solt_med_moms - kopt_med_moms + moms_total);
             four.setText(sf);
 
         } else {

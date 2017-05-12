@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,10 +36,14 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("event1"));
         v= getView();
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox_b);
         checkBox.setOnCheckedChangeListener(this);
@@ -112,15 +118,11 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
             if (moms != 1) {
                 String finalCheck = check;
                 SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
-                myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
-                        "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
-                Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
-                System.out.println(c.getCount());
+                Cursor c = myDB.rawQuery("SELECT * FROM "+MainActivity.username+" ", null);
                 int i = 0;
                 //get the index for the new item by getting the index of the last item and incrementing it
                 if (c.getCount() != 0) {
                     c.moveToLast();
-                    System.out.println(c.getInt(0));
                     i = c.getInt(0) + 1;
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -128,7 +130,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
                 String d = sdf.format(date);
 
                 //inserts the new item to database
-                myDB.execSQL("INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
+                myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
                         "VALUES (" + i + ",'" + item + "'," + moms + "," + price + ",'" + comment + "','" + d + "','" + IN_UT + "','" + finalCheck + "');");
             }
         } catch (Exception e) {
@@ -145,7 +147,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         Thread thread = new Thread() {
             public void run() {
                 try {
-                    fc.input(getActivity().getApplicationContext());
+                    fc.input(getActivity().getApplicationContext(),MainActivity.username);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -173,7 +175,6 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             Button b = (Button) v.findViewById(R.id.button8);
-            System.out.println(message);
             if (message.equalsIgnoreCase("1")) {
                 b.setBackgroundColor(Color.GREEN);
             } else if (message.equalsIgnoreCase("0")) {

@@ -64,7 +64,7 @@ public class History extends Fragment implements View.OnClickListener {
         //open the database file
         SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
         //get data from database
-        Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
+        Cursor c = myDB.rawQuery("SELECT * FROM "+MainActivity.username+" ", null);
         //moves to the last item so we get the newest item first
         c.moveToLast();
 

@@ -24,6 +24,8 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class SQL {
     Intent intent1 = new Intent("event1");
+    Intent intent2 = new Intent("event2");
+    Intent intent3 = new Intent("event3");
     Statement stmt = null;
     ResultSet rs = null;
     Connection con = null;
@@ -37,7 +39,7 @@ public class SQL {
 
         }
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/mydb", "root", "root");
+            Connection con = DriverManager.getConnection("jdbc:mysql://rh9011.hopto.org:3306/budget", "root", "root");
             return con;
         } catch (Exception ex) {
             System.out.println("Connection fail");
@@ -47,26 +49,23 @@ public class SQL {
     }
 
     // input data to database
-    public void input( Context context) throws SQLException, ClassNotFoundException, IOException {
+    public void input( Context context,String user) throws SQLException, ClassNotFoundException, IOException {
         String color = "0";
         try {
             //checks how many items there are inside the remote database, so we know how many item we should send to it.
-            int index = index(context);
+            int index = index(context,user);
             con = connect();
             stmt = con.createStatement();
             //get data from local database
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
-            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + "Budget" + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
-                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
-            Cursor c = myDB.rawQuery("SELECT * FROM Budget ", null);
-
+            Cursor c = myDB.rawQuery("SELECT * FROM "+user+" ", null);
             String query = "";
             c.moveToFirst();
             //store the items to a batch
             while (!c.isAfterLast()) {
                 int i = c.getInt(0);
-                if (index < i || index == 0) {
-                    query = "INSERT INTO Budget (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
+                if (index <= i || index == 0) {
+                    query = "INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
                             "(" + c.getInt(0) + ",'" + c.getString(1) + "'," + c.getString(2) + "," + c.getString(3) + ",'" + c.getString(4) + "','" + c.getString(5) + "','" + c.getString(6) + "','" + c.getString(7) + "');";
                     stmt.addBatch(query);
                 }
@@ -104,19 +103,18 @@ public class SQL {
     }
 
     //get the amount of items in remote database
-    public int index(Context context) {
+    public int index(Context context,String user) {
         int index = 0;
         try {
             con = connect();
 
             stmt = con.createStatement();
-            String query = "select * from budget";
+            String query = "SELECT * FROM "+user+"";
             rs = stmt.executeQuery(query);
             //ResultSetMetaData columns = rs.getMetaData();
             //get the index of the last item
-            rs.afterLast();
-            if (rs.previous())
-                index = Integer.parseInt(rs.getString(1));
+            rs.last();
+            index = rs.getRow();
 
         } catch (Exception ex) {
             //if it cannot connect to database then change the button color to red
@@ -142,5 +140,109 @@ public class SQL {
             }
         }
         return index;
+    }
+    public void login(Context context,String user,String pass){
+        String check="0";
+        try{
+            con=connect();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select * from users where username='"+user+"' AND password='"+pass+"'");
+            if(rs.next()==false){
+                check="1";
+            }
+
+
+        } catch (Exception ex) {
+            check="1";
+            System.out.println("Login fail3");
+        } finally {
+
+            intent2.putExtra("message", check);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent2);
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+    }
+    public void create(Context context,String user,String pass){
+        if(checkuser(user)) {
+            try {
+                con = connect();
+                stmt = con.createStatement();
+                stmt.addBatch("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                        "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+                stmt.addBatch("INSERT INTO users (username,password,date_added) VALUES " +
+                        "('" +user + "','"+pass+"',CURDATE() );");
+                stmt.executeBatch();
+                SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+                myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                        "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+
+                intent3.putExtra("message", "a");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent3);
+
+            } catch (Exception ex) {
+                System.out.println("Login fail5");
+            } finally {
+                try {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (stmt != null) {
+                        stmt.close();
+                    }
+                    if (con != null) {
+                        con.close();
+                    }
+                } catch (Exception ex) {
+                    Logger lgr = Logger.getLogger(Version.class.getName());
+                    lgr.log(Level.WARNING, ex.getMessage(), ex);
+                }
+            }
+        }
+
+    }
+    public boolean checkuser(String user){
+        boolean check=false;
+        try{
+            con=connect();
+            stmt = con.createStatement();
+            String query = "select * from users where username='"+user+"'";
+            rs = stmt.executeQuery(query);
+            if(rs.next()==false){
+                check=true;
+            }
+
+        } catch (Exception ex) {
+            check=true;
+            System.out.println("Login fail4");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+        return check;
     }
 }
