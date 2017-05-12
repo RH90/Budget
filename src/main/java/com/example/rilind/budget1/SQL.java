@@ -189,7 +189,7 @@ public class SQL {
                 myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                         "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
 
-                intent3.putExtra("message", "a");
+                intent3.putExtra("message", "1");
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent3);
 
             } catch (Exception ex) {
@@ -210,6 +210,9 @@ public class SQL {
                     lgr.log(Level.WARNING, ex.getMessage(), ex);
                 }
             }
+        }else{
+            intent3.putExtra("message", "0");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent3);
         }
 
     }
@@ -223,9 +226,12 @@ public class SQL {
             if(rs.next()==false){
                 check=true;
             }
+            if(user.equalsIgnoreCase("users")){
+                check=false;
+            }
 
         } catch (Exception ex) {
-            check=true;
+            check=false;
             System.out.println("Login fail4");
         } finally {
             try {

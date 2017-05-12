@@ -28,7 +28,13 @@ public class Create extends AppCompatActivity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            finish();
+            String message = intent.getStringExtra("message");
+            if(message.equalsIgnoreCase("1")) {
+                finish();
+            }else{
+                TextView err = (TextView) findViewById(R.id.error);
+                err.setText("Error");
+            }
 
         }
     };

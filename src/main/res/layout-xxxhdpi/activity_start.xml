@@ -170,7 +170,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:id="@+id/buy_moms"
         android:entries="@array/moms"
         app:layout_constraintHorizontal_bias="0.0"
@@ -183,7 +183,7 @@
         android:spinnerMode="dropdown" />
 
     <Spinner
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:id="@+id/sell_moms"
         android:entries="@array/moms"
         app:layout_constraintLeft_toRightOf="@+id/sell_item"
