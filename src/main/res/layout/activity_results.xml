@@ -25,46 +25,6 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="Köpt + moms"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:id="@+id/Kopt"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/moms"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-    <TextView
-        android:text="Vinst"
-        android:layout_width="42dp"
-        android:id="@+id/textView7"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:text="Moms"
-        android:layout_width="55dp"
-        android:layout_height="30dp"
-        android:id="@+id/moms"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView7"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-    <TextView
-        android:text="Sålt + moms"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:id="@+id/Solt"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/Kopt"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-    <TextView
         android:text="Till"
         android:layout_width="39dp"
         android:layout_height="27dp"
@@ -73,42 +33,6 @@
         android:textSize="18sp"
         android:layout_marginTop="48dp"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:layout_width="248dp"
-        android:id="@+id/four"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp"
-        android:textSize="18sp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:layout_width="248dp"
-        android:id="@+id/three"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/four"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:layout_width="248dp"
-        android:id="@+id/two"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/three"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:layout_width="248dp"
-        android:id="@+id/one"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/two"
-        android:layout_marginBottom="8dp"
-        android:textSize="18sp"
-        android:layout_height="30dp" />
 
     <Button
         android:text="Button"
@@ -120,7 +44,16 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/day_t" />
-
+    <Button
+        android:text="Save to pdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button4"
+        android:onClick="save"
+        app:layout_constraintTop_toBottomOf="@+id/month_t"
+        app:layout_constraintRight_toLeftOf="@+id/button6"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp" />
 
 
     <Spinner
@@ -183,5 +116,33 @@
         app:layout_constraintLeft_toRightOf="@+id/textView4"
         android:layout_height="42dp"
         android:layout_width="wrap_content" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/month_t"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:typeface="monospace"
+                android:id="@+id/textToPdf"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
 
 </android.support.constraint.ConstraintLayout>

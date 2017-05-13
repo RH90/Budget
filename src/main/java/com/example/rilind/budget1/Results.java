@@ -1,9 +1,20 @@
 package com.example.rilind.budget1;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.pdf.PrintedPdfDocument;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.TextPaint;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +24,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,6 +41,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
     Spinner year_f;
     Spinner day_t;
     Spinner day_f;
+    float size=0;
 
     View v;
     @Override
@@ -40,7 +56,8 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         v= getView();
         // Array of months for the month spinners
         String months[] = {"Month", "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Agusti", "September", "Oktober", "November", "December"};
-
+        Button b = (Button) v.findViewById(R.id.button4);
+        b.setVisibility(View.GONE);
         month_f = (Spinner) v.findViewById(R.id.month_f);
         month_t = (Spinner) v.findViewById(R.id.month_t);
         year_t = (Spinner) v.findViewById(R.id.year_t);
@@ -52,6 +69,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         setSpinner(months, month_t);
         Button sync = (Button) v.findViewById(R.id.button6);
         sync.setOnClickListener(this);
+        b.setOnClickListener(this);
 
         int y;
         //get current year
@@ -91,8 +109,20 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         //you can only show results if you first give the year interval
         if (year_t.getSelectedItemPosition() != 0 && year_f.getSelectedItemPosition() != 0) {
             //get date and save it as in the format of "YYYY-MM-DD"
-            String from = year_f.getSelectedItem().toString() + "-" + month_f.getSelectedItemPosition() + "-" + day_f.getSelectedItemPosition();
-            String to = year_t.getSelectedItem().toString() + "-" + month_t.getSelectedItemPosition() + "-" + day_t.getSelectedItemPosition();
+            int mf = month_f.getSelectedItemPosition();
+            if(mf==0)
+                mf++;
+            int df = day_f.getSelectedItemPosition();
+            if(df==0)
+                df++;
+            int mt = month_t.getSelectedItemPosition();
+            if(mt==0)
+                mt++;
+            int dt = day_f.getSelectedItemPosition();
+            if(dt==0)
+                dt++;
+            String from = year_f.getSelectedItem().toString() + "-" + mf + "-" + df;
+            String to = year_t.getSelectedItem().toString() + "-" + mt + "-" + dt;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date_f = sdf.parse(from);
             Date date_t = sdf.parse(to);
@@ -124,22 +154,112 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             }
             double moms_total=-(moms_in - moms_ut);
             //write out the results on the textfields
-            TextView one = (TextView) v.findViewById(R.id.one);
-            TextView two = (TextView) v.findViewById(R.id.two);
-            TextView three = (TextView) v.findViewById(R.id.three);
-            TextView four = (TextView) v.findViewById(R.id.four);
-            String sf = String.format("%.2f", solt_med_moms);
-            one.setText(sf);
-            sf = String.format("%.2f", -kopt_med_moms);
-            two.setText(sf);
-            sf = String.format("%.2f", moms_total);
-            three.setText(sf);
-            sf = String.format("%.2f", solt_med_moms - kopt_med_moms + moms_total);
-            four.setText(sf);
+            TextView one = (TextView) v.findViewById(R.id.textToPdf);
+            String s= String.format("  Results  "+from+" to "+to+"\n\n" +
+                                    "-------------------------------------\n"+
+                                    "  S\u00e5lt med moms:      %.2f Kr\n\n" +
+                                    "-------------------------------------\n"+
+                                    "  K\u00f6pt med moms:      %.2f Kr\n\n" +
+                                    "-------------------------------------\n"+
+                                    "  Moms total:         %.2f Kr\n\n" +
+                                    "-------------------------------------\n"+
+                                    "  Vinst:              %.2f Kr",
+                    solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total);
+
+            one.setText(s);
+            Button b = (Button) v.findViewById(R.id.button4);
+            b.setVisibility(View.VISIBLE);
+
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            System.out.println(dpWidth);
+
+            TextPaint paint = one.getPaint();
+            int wordwidth=(int)paint.measureText("a",0,1);
+            float w =wordwidth / getResources().getDisplayMetrics().scaledDensity;
+            System.out.println(dpWidth/w);
+            //z = the amound of 'a' character that fit in a line in textview
+            float z =dpWidth/w;
+            //40.0 = the target line size, t =
+            float t =z/(float)40.0;
+
+            float sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+
+            float hey = sp*t;
+            one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
+            size=hey;
+
 
         } else {
             //error message
         }
+
+
+    }
+    public void save(){
+        // Create a shiny new (but blank) PDF document in memory
+        // We want it to optionally be printable, so add PrintAttributes
+        // and use a PrintedPdfDocument. Simpler: new PdfDocument().
+
+        TextView content =(TextView) v.findViewById(R.id.textToPdf);
+
+        TextPaint paint = content.getPaint();
+        //the width of the character 'a' in pixels
+        int wordwidth=(int)paint.measureText("a",0,1);
+        //15 = the tar
+        float mul =wordwidth/(float)15.0;
+        float sp = content.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+
+        float hey = sp/mul;
+        content.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
+        PrintAttributes printAttrs = new PrintAttributes.Builder().
+                setColorMode(PrintAttributes.COLOR_MODE_COLOR).
+                setMediaSize(PrintAttributes.MediaSize.NA_LETTER).
+                setResolution(new PrintAttributes.Resolution("zooey", getActivity().PRINT_SERVICE, 300, 300)).
+                setMinMargins(PrintAttributes.Margins.NO_MARGINS).
+                build();
+
+        PdfDocument document = new PrintedPdfDocument(getActivity(), printAttrs);
+        // crate a page description
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+        // create a new page from the PageInfo
+        PdfDocument.Page page = document.startPage(pageInfo);
+        // repaint the user's text into the page
+
+        content.draw(page.getCanvas());
+        // do final processing of the page
+        document.finishPage(page);
+        // Here you could add more pages in a longer doc app, but you'd have
+        // to handle page-breaking yourself in e.g., write your own word processor...
+        // Now write the PDF document to a file; it actually needs to be a file
+        // since the Share mechanism can't accept a byte[]. though it can
+        // accept a String/CharSequence. Meh.
+        try {
+            String root = Environment.getExternalStorageDirectory().toString();
+            System.out.println(root);
+            File myDir = new File(root + "/yes");
+            myDir.mkdir();
+            File f = new File (myDir, "yes.pdf");
+            FileOutputStream fos = new FileOutputStream(f);
+            document.writeTo(fos);
+            document.close();
+            fos.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error generating file", e);
+        }
+            String root = Environment.getExternalStorageDirectory().toString();
+            File f = new File(root + "/yes","yes.pdf");
+            Uri uri = Uri.fromFile(f);
+            Intent mShareIntent = new Intent();
+            mShareIntent.setAction(Intent.ACTION_SEND);
+            mShareIntent.setType("application/pdf");
+            // Assuming it may go via eMail:
+            mShareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Here is a PDF from PdfSend");
+            mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(mShareIntent);
+
+
+        content.setTextSize(TypedValue.COMPLEX_UNIT_SP,size);
     }
 
     //writes out the text on the spinners
@@ -195,7 +315,10 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
     @Override
     public void onClick(View view) {
         try {
-            results();
+            if(view.getId()==v.findViewById(R.id.button4).getId())
+                save();
+            else
+                results();
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (IOException e) {
