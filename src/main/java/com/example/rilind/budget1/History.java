@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,7 @@ public class History extends Fragment implements View.OnClickListener {
         TextView textView = (TextView) v.findViewById(R.id.textView);
         textView.setMovementMethod(new ScrollingMovementMethod());
         textView.setText(x);
+        textView.setTextColor(Color.BLACK);
     }
 
     //go here when the 1 month button is pressed

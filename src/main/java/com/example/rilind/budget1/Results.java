@@ -3,6 +3,7 @@ package com.example.rilind.budget1;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -154,16 +155,17 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             }
             double moms_total=-(moms_in - moms_ut);
             //write out the results on the textfields
+            String line=            "  ______________________________________________________________________________";
             TextView one = (TextView) v.findViewById(R.id.textToPdf);
-            String s= String.format("  Results  "+from+" to "+to+"\n\n" +
-                                    "-------------------------------------\n"+
-                                    "  S\u00e5lt med moms:      %.2f Kr\n\n" +
-                                    "-------------------------------------\n"+
-                                    "  K\u00f6pt med moms:      %.2f Kr\n\n" +
-                                    "-------------------------------------\n"+
-                                    "  Moms total:         %.2f Kr\n\n" +
-                                    "-------------------------------------\n"+
-                                    "  Vinst:              %.2f Kr",
+            String s= String.format("\n\n    Results                                 "+from+" to "+to+"\n\n" +
+                                    line+"\n"+
+                                    "    S\u00e5lt med moms:                                               %.2f Kr\n\n" +
+                                    line+"\n"+
+                                    "    K\u00f6pt med moms:                                               %.2f Kr\n\n" +
+                                    line+"\n"+
+                                    "    Moms total:                                                  %.2f Kr\n\n" +
+                                    line+"\n"+
+                                    "    Vinst:                                                       %.2f Kr",
                     solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total);
 
             one.setText(s);
@@ -181,10 +183,10 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             //z = the amound of 'a' character that fit in a line in textview
             float z =dpWidth/w;
             //40.0 = the target line size, t =
-            float t =z/(float)40.0;
+            float t =z/(float)80.0;
 
             float sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
-
+            one.setTextColor(Color.BLACK);
             float hey = sp*t;
             one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
             size=hey;
@@ -206,11 +208,12 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         TextPaint paint = content.getPaint();
         //the width of the character 'a' in pixels
         int wordwidth=(int)paint.measureText("a",0,1);
-        //15 = the tar
-        float mul =wordwidth/(float)15.0;
+        //40 = characters per line
+        double test=595.0/80.0;
+        float mul =wordwidth/(float)test;
         float sp = content.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
-
         float hey = sp/mul;
+
         content.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
         PrintAttributes printAttrs = new PrintAttributes.Builder().
                 setColorMode(PrintAttributes.COLOR_MODE_COLOR).
