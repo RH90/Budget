@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.IOException;
+
 public class TabActivity extends AppCompatActivity {
 
     /**
@@ -43,6 +45,34 @@ public class TabActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab){
+                int position = tab.getPosition();
+                if(position==1){
+                    History h= (History)mSectionsPagerAdapter.tab2;
+                    try {
+                        h.month();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }
@@ -79,7 +109,7 @@ public class TabActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
+        History tab2;
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -93,7 +123,7 @@ public class TabActivity extends AppCompatActivity {
                     start tab1 = new start();
                     return tab1;
                 case 1:
-                    History tab2 = new History();
+                    tab2 = new History();
                     return tab2;
                 case 2:
                     Results tab3 = new Results();
@@ -101,6 +131,12 @@ public class TabActivity extends AppCompatActivity {
             }
             return null;
         }
+        public Fragment returnH() {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return tab2;
+        }
+
 
         @Override
         public int getCount() {

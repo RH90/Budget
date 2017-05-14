@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
@@ -132,6 +134,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
                 //inserts the new item to database
                 myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
                         "VALUES (" + i + ",'" + item + "'," + moms + "," + price + ",'" + comment + "','" + d + "','" + IN_UT + "','" + finalCheck + "');");
+
             }
         } catch (Exception e) {
             //error
@@ -140,9 +143,11 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
 
     //update the remote database
     public void sync() {
-        Button b = (Button) v.findViewById(R.id.button8);
-        b.setBackgroundColor(Color.LTGRAY);
         //start new thread
+        Button b = (Button) v.findViewById(R.id.button8);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            b.getBackground().setTint(0xFF303F9F);
+        }
         SQL fc = new SQL();
         Thread thread = new Thread() {
             public void run() {
@@ -161,6 +166,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
 
     }
 
+
     public void setSpinner(Spinner spinner) {
         // Application of the Array to the Spinner
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.moms, R.layout.spinner_item);
@@ -170,17 +176,24 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
 
     //changes the colour of the sync button
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             Button b = (Button) v.findViewById(R.id.button8);
             if (message.equalsIgnoreCase("1")) {
-                b.setBackgroundColor(Color.GREEN);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    b.getBackground().setTint(Color.GREEN);
+                }
             } else if (message.equalsIgnoreCase("0")) {
-                b.setBackgroundColor(Color.RED);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    b.getBackground().setTint(Color.RED);
+                }
             } else {
-                b.setBackgroundColor(Color.YELLOW);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    b.getBackground().setTint(Color.YELLOW);
+                }
             }
 
         }

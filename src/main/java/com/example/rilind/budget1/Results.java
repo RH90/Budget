@@ -192,13 +192,13 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             TextView one = (TextView) v.findViewById(R.id.textToPdf);
             String s= String.format("\n\n    Results                                 "+from+" to "+to+"\n\n" +
                                     line+"\n"+
-                                    "    S\u00e5lt med moms:                                               %.2f Kr\n\n" +
+                                    "    S\u00e5lt med moms:                                               %10.2f Kr\n\n" +
                                     line+"\n"+
-                                    "    K\u00f6pt med moms:                                               %.2f Kr\n\n" +
+                                    "    K\u00f6pt med moms:                                               %10.2f Kr\n\n" +
                                     line+"\n"+
-                                    "    Moms total:                                                  %.2f Kr\n\n" +
+                                    "    Moms total:                                                  %10.2f Kr\n\n" +
                                     line+"\n"+
-                                    "    Vinst:                                                       %.2f Kr",
+                                    "    Vinst:                                                       %10.2f Kr",
                     solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total);
 
             one.setText(s);

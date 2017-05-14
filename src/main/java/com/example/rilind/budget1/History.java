@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -53,6 +54,7 @@ public class History extends Fragment{
         // Always call the superclass so it can save the view hierarchy state
 
     }
+
 
     // reloads the textfield when rotating
     public void start() {
