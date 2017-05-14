@@ -5,7 +5,8 @@
     android:id="@+id/activity_create"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.rilind.budget1.Create">
+    tools:context="com.example.rilind.budget1.Create"
+    android:background="@color/gg">
 
     <TextView
         android:text="Create login"
