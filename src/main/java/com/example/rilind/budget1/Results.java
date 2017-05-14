@@ -43,6 +43,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
     Spinner day_t;
     Spinner day_f;
     float size=0;
+    static float target=80;
 
     View v;
     @Override
@@ -101,7 +102,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         float w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
         System.out.println("w:" +w);
         float z =dpWidth/w;
-        float t =z/(float)80.0;
+        float t =z/target;
         float sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
         one.setTextColor(Color.BLACK);
         float hey = sp*t;
@@ -112,8 +113,10 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         wordwidth= paint.measureText("a",0,1);
         w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
         z=dpWidth/w;
-        if(z>80){
-            t =z/(float)82.0;
+
+        if(z>target){
+            target=82;
+            t =z/target;
             sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
             one.setTextColor(Color.BLACK);
             hey = sp*t;
@@ -192,9 +195,9 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             TextView one = (TextView) v.findViewById(R.id.textToPdf);
             String s= String.format("\n\n    Results                                 "+from+" to "+to+"\n\n" +
                                     line+"\n"+
-                                    "    S\u00e5lt med moms:                                               %10.2f Kr\n\n" +
+                                    "    Int\u00e4kt med moms:                                             %10.2f Kr\n\n" +
                                     line+"\n"+
-                                    "    K\u00f6pt med moms:                                               %10.2f Kr\n\n" +
+                                    "    Utgift med moms:                                             %10.2f Kr\n\n" +
                                     line+"\n"+
                                     "    Moms total:                                                  %10.2f Kr\n\n" +
                                     line+"\n"+
@@ -226,7 +229,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         double wordwidth=paint.measureText("a",0,1);
         System.out.println(wordwidth);
         //40 = characters per line
-        double test=595.0/80.0;
+        double test=595.0/target;
         float mul =(float) wordwidth/(float)test;
         float sp = content.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
         System.out.println("w2:"+wordwidth/getResources().getDisplayMetrics().scaledDensity);

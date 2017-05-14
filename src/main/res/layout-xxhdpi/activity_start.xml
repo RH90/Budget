@@ -80,7 +80,7 @@
         app:layout_constraintHorizontal_bias="0.53" />
 
     <TextView
-        android:text="BUY"
+        android:text="Utgift"
         android:layout_width="53dp"
         android:layout_height="24dp"
         android:id="@+id/textView2"
@@ -93,7 +93,7 @@
         android:textColor="@android:color/black" />
 
     <TextView
-        android:text="SELL"
+        android:text="Intäkt"
         android:layout_width="53dp"
         android:layout_height="24dp"
         android:id="@+id/textView3"

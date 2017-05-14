@@ -1,5 +1,6 @@
 package com.example.rilind.budget1;
 
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class TabActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class TabActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    History h;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +54,10 @@ public class TabActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab){
                 int position = tab.getPosition();
                 if(position==1){
-                    History h= (History)mSectionsPagerAdapter.tab2;
-                    try {
-                        h.month();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    h= mSectionsPagerAdapter.tab2;
+                    new Task().execute("");
+
+
                 }
 
             }
@@ -155,6 +154,36 @@ public class TabActivity extends AppCompatActivity {
                     return "Results";
             }
             return null;
+        }
+    }
+    private class Task extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                h.month();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
         }
     }
 }

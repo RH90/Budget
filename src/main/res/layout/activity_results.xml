@@ -144,8 +144,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:typeface="monospace"
+                android:background="@android:color/background_light"
                 android:id="@+id/textToPdf"
-                android:textSize="1sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 
