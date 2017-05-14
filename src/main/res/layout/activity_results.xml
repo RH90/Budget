@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:typeface="monospace"
                 android:id="@+id/textToPdf"
-                android:textSize="14sp" />
+                android:textSize="1sp" />
         </LinearLayout>
     </ScrollView>
 

@@ -91,6 +91,39 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         month_f.setOnItemSelectedListener(this);
         month_t.setOnItemSelectedListener(this);
 
+        TextView one = (TextView) v.findViewById(R.id.textToPdf);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        System.out.println(dpWidth);
+
+        TextPaint paint = one.getPaint();
+        double wordwidth= paint.measureText("a",0,1);
+        float w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
+        System.out.println("w:" +w);
+        float z =dpWidth/w;
+        float t =z/(float)80.0;
+        float sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+        one.setTextColor(Color.BLACK);
+        float hey = sp*t;
+        System.out.println(wordwidth);
+        one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
+
+
+        wordwidth= paint.measureText("a",0,1);
+        w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
+        z=dpWidth/w;
+        if(z>80){
+            t =z/(float)82.0;
+            sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+            one.setTextColor(Color.BLACK);
+            hey = sp*t;
+            System.out.println(wordwidth);
+            one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
+        }
+        w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
+        z=dpWidth/w;
+        size=hey;
+        System.out.println("z:" +z);
 
 
     }
@@ -172,24 +205,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             Button b = (Button) v.findViewById(R.id.button4);
             b.setVisibility(View.VISIBLE);
 
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-            System.out.println(dpWidth);
 
-            TextPaint paint = one.getPaint();
-            int wordwidth=(int)paint.measureText("a",0,1);
-            float w =wordwidth / getResources().getDisplayMetrics().scaledDensity;
-            System.out.println(dpWidth/w);
-            //z = the amound of 'a' character that fit in a line in textview
-            float z =dpWidth/w;
-            //40.0 = the target line size, t =
-            float t =z/(float)80.0;
-
-            float sp = one.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
-            one.setTextColor(Color.BLACK);
-            float hey = sp*t;
-            one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
-            size=hey;
 
 
         } else {
@@ -207,11 +223,13 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
 
         TextPaint paint = content.getPaint();
         //the width of the character 'a' in pixels
-        int wordwidth=(int)paint.measureText("a",0,1);
+        double wordwidth=paint.measureText("a",0,1);
+        System.out.println(wordwidth);
         //40 = characters per line
         double test=595.0/80.0;
-        float mul =wordwidth/(float)test;
+        float mul =(float) wordwidth/(float)test;
         float sp = content.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+        System.out.println("w2:"+wordwidth/getResources().getDisplayMetrics().scaledDensity);
         float hey = sp/mul;
 
         content.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);

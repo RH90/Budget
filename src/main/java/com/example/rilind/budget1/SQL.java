@@ -143,6 +143,7 @@ public class SQL {
     }
     public void login(Context context,String user,String pass){
         String check="0";
+
         try{
             con=connect();
             stmt = con.createStatement();
@@ -250,5 +251,47 @@ public class SQL {
             }
         }
         return check;
+    }
+    //import db from remote db
+    public void importdb(Context context,String user){
+
+        try {
+            con = connect();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select * from "+user+"");
+
+            SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+            myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                    "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+            rs.first();
+            while(rs.isAfterLast()){
+                myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
+                        "VALUES (" + rs.getString(1) + ",'" + rs.getString(2) + "'," + rs.getString(3) + "," + rs.getString(4) + ",'" +
+                        rs.getString(5) + "','" + rs.getString(6) + "','" + rs.getString(7) + "','" + rs.getString(8) + "');");
+                rs.next();
+            }
+
+            intent3.putExtra("message", "1");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent3);
+
+        } catch (Exception ex) {
+            System.out.println("Login fail5");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+
     }
 }

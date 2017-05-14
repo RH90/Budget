@@ -8,42 +8,12 @@
     android:layout_height="fill_parent"
     tools:context="com.example.rilind.budget1.History">
 
-    <Button
-        android:text="1 år"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/year"
-        android:layout_marginStart="13dp"
-        android:layout_alignBaseline="@+id/month3"
-        android:layout_alignBottom="@+id/month3"
-        android:layout_toEndOf="@+id/month3" />
-
-    <Button
-        android:text="3 månader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/month3"
-        android:layout_alignBaseline="@+id/month1"
-        android:layout_alignBottom="@+id/month1"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="1 månad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/month1"
-        android:onClick="month"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/month3"
-        android:layout_marginEnd="16dp" />
-
     <ScrollView
         android:id="@+id/SCROLLER_ID"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fillViewport="true"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/month3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp"
         android:layout_marginLeft="10dp"

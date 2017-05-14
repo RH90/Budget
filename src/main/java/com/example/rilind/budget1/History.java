@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-public class History extends Fragment implements View.OnClickListener {
+public class History extends Fragment{
     String x = "";
     View v;
     @Override
@@ -36,9 +36,14 @@ public class History extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         v= getView();
-        Button b = (Button) v.findViewById(R.id.month1);
-        b.setOnClickListener(this);
         start();
+        try {
+            month();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -94,14 +99,4 @@ public class History extends Fragment implements View.OnClickListener {
         //textView.setText(wordtoSpan);
     }
 
-    @Override
-    public void onClick(View view) {
-        try {
-            month();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }

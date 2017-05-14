@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         EditText pass = (EditText) findViewById(R.id.editText3);
         username=user.getText().toString();
         password=pass.getText().toString();
+        SQLiteDatabase myDB = openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+        myDB.execSQL("CREATE TABLE IF NOT EXISTS " + username + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
         Intent in = new Intent(this, TabActivity.class);
         startActivity(in);
     }
