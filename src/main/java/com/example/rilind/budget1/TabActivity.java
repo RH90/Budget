@@ -1,5 +1,6 @@
 package com.example.rilind.budget1;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class TabActivity extends AppCompatActivity {
 
@@ -93,6 +93,8 @@ public class TabActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this,Settings.class);
+            this.startActivity(i);
             return true;
         }
 

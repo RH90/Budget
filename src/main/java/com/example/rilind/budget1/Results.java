@@ -123,6 +123,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             System.out.println(wordwidth);
             one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
         }
+        one.setVisibility(View.GONE);
         w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
         z=dpWidth/w;
         size=hey;
@@ -205,6 +206,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
                     solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total);
 
             one.setText(s);
+            one.setVisibility(View.VISIBLE);
             Button b = (Button) v.findViewById(R.id.button4);
             b.setVisibility(View.VISIBLE);
 

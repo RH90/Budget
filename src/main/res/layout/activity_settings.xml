@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sett"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    tools:context="com.example.rilind.budget1.Settings"
+    android:weightSum="1"
+    android:background="@color/gg">
+
+    <TextView
+        android:text="Database"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:selectAllOnFocus="false"
+        android:id="@+id/textSync" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:text="Last updated:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:selectAllOnFocus="false"
+        android:id="@+id/textView18"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSync"
+        android:onClick="sync"
+        android:textAlignment="viewStart"
+        android:backgroundTint="@color/gg"
+        android:text="Update remote" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Import"
+        android:onClick="importRemote"
+        android:textAlignment="viewStart"
+        android:backgroundTint="@color/gg"
+        android:text="Import from remote" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        />
+
+    <TextView
+        android:text="User info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView16"
+        android:textSize="25sp"
+        android:textColor="@android:color/black" />
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@android:color/darker_gray"
+        android:layout_height="5dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/numEmp"
+        android:textAlignment="viewStart"
+        android:onClick="numb"
+        android:backgroundTint="@color/gg"
+        android:text="Antal anställda: 0" />
+
+    <Switch
+        android:text="   Äger bara en företag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/switch2"
+        android:layout_weight="0.06"
+        android:textSize="14sp"
+        android:checked="true" />
+
+</LinearLayout>

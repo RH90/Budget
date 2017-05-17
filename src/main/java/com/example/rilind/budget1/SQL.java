@@ -264,15 +264,12 @@ public class SQL {
             myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                     "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
             rs.first();
-            while(rs.isAfterLast()){
+            while(!rs.isAfterLast()){
                 myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
                         "VALUES (" + rs.getString(1) + ",'" + rs.getString(2) + "'," + rs.getString(3) + "," + rs.getString(4) + ",'" +
                         rs.getString(5) + "','" + rs.getString(6) + "','" + rs.getString(7) + "','" + rs.getString(8) + "');");
                 rs.next();
             }
-
-            intent3.putExtra("message", "1");
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent3);
 
         } catch (Exception ex) {
             System.out.println("Login fail5");
