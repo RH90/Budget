@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -42,9 +45,11 @@
             android:name=".Create"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".Settings"
+        <activity
+            android:name=".Settings"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".BarcodeRead"></activity>
     </application>
 
 </manifest>

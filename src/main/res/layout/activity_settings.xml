@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:selectAllOnFocus="false"
-        android:id="@+id/textView18"
+        android:id="@+id/updated"
         android:textSize="20dp" />
 
     <Button

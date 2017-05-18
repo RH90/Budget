@@ -263,6 +263,7 @@ public class SQL {
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
             myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                     "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+            myDB.delete(user, null, null);
             rs.first();
             while(!rs.isAfterLast()){
                 myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +

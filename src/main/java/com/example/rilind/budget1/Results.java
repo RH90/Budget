@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Environment;
@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +23,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,7 +39,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
     Spinner day_t;
     Spinner day_f;
     float size=0;
-    static float target=80;
+    static float target=85;
 
     View v;
     @Override
@@ -93,6 +89,7 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         month_t.setOnItemSelectedListener(this);
 
         TextView one = (TextView) v.findViewById(R.id.textToPdf);
+        one.setTypeface(Typeface.MONOSPACE);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         System.out.println(dpWidth);
@@ -109,11 +106,10 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
         System.out.println(wordwidth);
         one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
 
-
+        /*
         wordwidth= paint.measureText("a",0,1);
         w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
         z=dpWidth/w;
-
         if(z>target){
             target=82;
             t =z/target;
@@ -123,7 +119,9 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             System.out.println(wordwidth);
             one.setTextSize(TypedValue.COMPLEX_UNIT_SP,hey);
         }
+        */
         one.setVisibility(View.GONE);
+
         w =(float) wordwidth / getResources().getDisplayMetrics().scaledDensity;
         z=dpWidth/w;
         size=hey;

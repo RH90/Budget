@@ -1,30 +1,19 @@
 package com.example.rilind.budget1;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -40,8 +29,6 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
-                new IntentFilter("event1"));
         v= getView();
 
         getActivity().getWindow().setSoftInputMode(
@@ -53,8 +40,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         sell.setOnClickListener(this);
         Button buy = (Button) v.findViewById(R.id.savebuy);
         buy.setOnClickListener(this);
-        Button sync = (Button) v.findViewById(R.id.button8);
-        sync.setOnClickListener(this);
+
         Spinner s1 = (Spinner) v.findViewById(R.id.buy_moms);
         Spinner s2 = (Spinner) v.findViewById(R.id.sell_moms);
 
@@ -141,31 +127,6 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         }
     }
 
-    //update the remote database
-    public void sync() {
-        //start new thread
-        Button b = (Button) v.findViewById(R.id.button8);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            b.getBackground().setTint(0xFF303F9F);
-        }
-        SQL fc = new SQL();
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    fc.input(getActivity().getApplicationContext(),MainActivity.username);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-
-    }
-
 
     public void setSpinner(Spinner spinner) {
         // Application of the Array to the Spinner
@@ -174,30 +135,6 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         spinner.setAdapter(adapter);
     }
 
-    //changes the colour of the sync button
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String message = intent.getStringExtra("message");
-            Button b = (Button) v.findViewById(R.id.button8);
-            if (message.equalsIgnoreCase("1")) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    b.getBackground().setTint(Color.GREEN);
-                }
-            } else if (message.equalsIgnoreCase("0")) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    b.getBackground().setTint(Color.RED);
-                }
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    b.getBackground().setTint(Color.YELLOW);
-                }
-            }
-
-        }
-    };
 
     //changes the VAT value when the "used" button is pressed
     @Override
@@ -222,7 +159,5 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         savesell();
         else if(view.getId()==R.id.savebuy)
             savebuy();
-        else if(view.getId()==R.id.button8)
-            sync();
     }
 }

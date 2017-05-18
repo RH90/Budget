@@ -1,6 +1,7 @@
 package com.example.rilind.budget1;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,10 @@ public class TabActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SQLiteDatabase myDB = openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+        myDB.execSQL("CREATE TABLE IF NOT EXISTS " + MainActivity.username + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
+                "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+
         setContentView(R.layout.activity_tab);
 
         // Create the adapter that will return a fragment for each of the three

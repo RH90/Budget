@@ -1,24 +1,14 @@
 package com.example.rilind.budget1;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -73,6 +63,7 @@ public class History extends Fragment{
         //open the database file
         SQLiteDatabase myDB = getActivity().openOrCreateDatabase("Budget", getActivity().MODE_PRIVATE, null);
         //get data from database
+
         Cursor c = myDB.rawQuery("SELECT * FROM "+MainActivity.username+" ", null);
         //moves to the last item so we get the newest item first
         c.moveToLast();

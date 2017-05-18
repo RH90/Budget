@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -16,20 +15,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     static String username="";
     static String password="";
+    static EditText user ;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -38,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("event2"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(test,
+                new IntentFilter("event3"));
         setContentView(R.layout.activity_main);
-
+        user = (EditText) findViewById(R.id.editText2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
                 TextView error = (TextView) findViewById(R.id.errorM);
                 error.setText("Login fail");
             }
+
+        }
+    };
+
+    private BroadcastReceiver test = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            EditText user = (EditText) findViewById(R.id.editText2);
+            user.setText(message);
 
         }
     };
@@ -112,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+    public void testBarcode(View view){
+        Intent in = new Intent(this, BarcodeRead.class);
+        startActivity(in);
     }
 
 /*

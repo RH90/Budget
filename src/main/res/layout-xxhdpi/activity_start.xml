@@ -83,7 +83,6 @@
         android:text="Utgift"
         android:layout_width="53dp"
         android:layout_height="24dp"
-        android:id="@+id/textView2"
         android:layout_marginTop="56dp"
         android:textColorHint="@drawable/selector"
         app:layout_constraintTop_toBottomOf="@+id/sell_comment"
@@ -96,7 +95,6 @@
         android:text="Intäkt"
         android:layout_width="53dp"
         android:layout_height="24dp"
-        android:id="@+id/textView3"
         android:textColorHint="@drawable/selector"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="48dp"
@@ -157,20 +155,8 @@
         app:layout_constraintRight_toRightOf="parent"
         style="@style/Widget.AppCompat.Button.Colored"
         android:backgroundTint="@color/colorPrimaryDark" />
-    <Button
-        android:text="Sync"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button8"
-        android:onClick="sync"
-        android:layout_marginEnd="2dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:backgroundTint="@color/colorPrimaryDark" />
 
-    <Spinner
+            <Spinner
         android:layout_width="wrap_content"
         android:id="@+id/buy_moms"
         android:entries="@array/moms"

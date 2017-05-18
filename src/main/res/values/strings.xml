@@ -8,6 +8,9 @@
         <item>12%</item>
         <item>6%</item>
     </string-array>
+    <string-array name="momsut">
+        <item>20%</item>
+    </string-array>
     <string-array name="zero">
         <item>0%</item>
     </string-array>
