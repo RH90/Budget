@@ -1,12 +1,14 @@
 package com.example.rilind.budget1;
 
-import android.support.v4.content.LocalBroadcastManager;
+import android.hardware.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -14,18 +16,23 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 public class BarcodeRead extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private SurfaceView cameraView;
     private TextView barcodeValue;
+    boolean toggle=false;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_barcode);
+        gogo();
 
+    }
+    public void gogo(){
         cameraView = (SurfaceView) findViewById(R.id.surface_view);
         barcodeValue = (TextView) findViewById(R.id.barcode_value);
 
@@ -37,7 +44,6 @@ public class BarcodeRead extends AppCompatActivity {
                 .setRequestedPreviewSize(1600, 1024)
                 .setAutoFocusEnabled(true) //you should add this feature
                 .build();
-
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -71,7 +77,13 @@ public class BarcodeRead extends AppCompatActivity {
                 if (barcodes.size() != 0) {
                     barcodeValue.post(() -> {
                         //Update barcode value to TextView
-                        MainActivity.user.setText(barcodes.valueAt(0).displayValue);
+                        Barcode bar =barcodes.valueAt(0);
+                        //bar.format==Barcode.EAN_8;  //example
+                        //String value = bar.rawValue;
+                        //bar.valueFormat==Barcode.PHONE;
+                        //String value = bar.phone.number;
+                        MainActivity.user.setText(bar.displayValue);
+
                         finish();
 
 
@@ -80,14 +92,66 @@ public class BarcodeRead extends AppCompatActivity {
             }
         });
     }
+
     public  void onResume(){
 
+    }
+
+    public void flash(View view){
+        toggle = !toggle;
+        Camera camera = getCamera(cameraSource);
+        if(toggle) {
+            try {
+                Camera.Parameters p = camera.getParameters();
+                p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(p);
+                camera.startPreview();
+
+            } catch (Exception e2) {
+                Toast.makeText(getApplicationContext(), "Torch Failed: " + e2.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            try {
+                Camera.Parameters p = camera.getParameters();
+                p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(p);
+                camera.startPreview();
+
+            } catch (Exception e2) {
+                Toast.makeText(getApplicationContext(), "Torch Failed: " + e2.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+    }
+    private static Camera getCamera(CameraSource cameraSource) {
+        Field[] declaredFields = CameraSource.class.getDeclaredFields();
+        for (Field field : declaredFields) {
+            if (field.getType() == Camera.class) {
+                field.setAccessible(true);
+                try {
+                    Camera camera = (Camera) field.get(cameraSource);
+                    if (camera != null) {
+                        return camera;
+                    }
+                    return null;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return null;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         cameraSource.release();
         barcodeDetector.release();
+
     }
+
+
 }

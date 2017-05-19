@@ -11,6 +11,7 @@
     <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>
     <uses-permission android:name="android.permission.CAMERA" />
 
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
