@@ -120,10 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void testBarcode(View view){
-        Intent in = new Intent(this, BarcodeRead.class);
-        startActivity(in);
-    }
 
 /*
     @Override

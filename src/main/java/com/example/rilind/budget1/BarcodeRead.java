@@ -1,6 +1,8 @@
 package com.example.rilind.budget1;
 
+import android.content.Intent;
 import android.hardware.Camera;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -23,7 +25,9 @@ public class BarcodeRead extends AppCompatActivity {
     private CameraSource cameraSource;
     private SurfaceView cameraView;
     private TextView barcodeValue;
+    private String send="";
     boolean toggle=false;
+    Intent intent = new Intent("barcode");
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -82,7 +86,7 @@ public class BarcodeRead extends AppCompatActivity {
                         //String value = bar.rawValue;
                         //bar.valueFormat==Barcode.PHONE;
                         //String value = bar.phone.number;
-                        MainActivity.user.setText(bar.displayValue);
+                        send=bar.displayValue;
 
                         finish();
 
@@ -147,7 +151,8 @@ public class BarcodeRead extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        intent.putExtra("message", send);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         cameraSource.release();
         barcodeDetector.release();
 

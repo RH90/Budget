@@ -106,16 +106,5 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:backgroundTint="@color/colorPrimaryDark" />
 
-    <Button
-        android:text="Test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test"
-        android:onClick="testBarcode"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

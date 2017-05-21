@@ -6,11 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
+
+
 import junit.runner.Version;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,7 +29,9 @@ public class SQL {
     Intent intent1 = new Intent("event1");
     Intent intent2 = new Intent("event2");
     Intent intent3 = new Intent("event3");
+    Intent intent5 = new Intent("getget");
     Statement stmt = null;
+    PreparedStatement pstmt = null;
     ResultSet rs = null;
     Connection con = null;
 
@@ -55,24 +60,35 @@ public class SQL {
             //checks how many items there are inside the remote database, so we know how many item we should send to it.
             int index = index(context,user);
             con = connect();
-            stmt = con.createStatement();
+            //stmt = con.createStatement();
+            pstmt= con.prepareStatement("INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
+                    "(?,?,?,?,?,?,?,?)");
             //get data from local database
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
             Cursor c = myDB.rawQuery("SELECT * FROM "+user+" ", null);
             String query = "";
             c.moveToFirst();
+            System.out.println("::"+index);
             //store the items to a batch
             while (!c.isAfterLast()) {
                 int i = c.getInt(0);
                 if (index <= i || index == 0) {
                     query = "INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
                             "(" + c.getInt(0) + ",'" + c.getString(1) + "'," + c.getString(2) + "," + c.getString(3) + ",'" + c.getString(4) + "','" + c.getString(5) + "','" + c.getString(6) + "','" + c.getString(7) + "');";
-                    stmt.addBatch(query);
+                    pstmt.setInt(1,c.getInt(0));
+                    pstmt.setString(2,c.getString(1));
+                    pstmt.setFloat(3,c.getFloat(2));
+                    pstmt.setFloat(4,c.getFloat(3));
+                    pstmt.setString(5,c.getString(4));
+                    pstmt.setString(6,c.getString(5));
+                    pstmt.setString(7,c.getString(6));
+                    pstmt.setString(8,c.getString(7));
+                    pstmt.execute();
                 }
                 c.moveToNext();
             }
             //execute all the statements that where stored in the batch
-            stmt.executeBatch();
+            //stmt.executeBatch();
             //if the remote database is up to date then make the sync button yellow, else make it green
             if (query.equalsIgnoreCase(""))
                 color = "2";
@@ -89,8 +105,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -109,11 +125,13 @@ public class SQL {
             con = connect();
 
             stmt = con.createStatement();
+
+
             String query = "SELECT * FROM "+user+"";
             rs = stmt.executeQuery(query);
-            //ResultSetMetaData columns = rs.getMetaData();
-            //get the index of the last item
+
             rs.last();
+
             index = rs.getRow();
 
         } catch (Exception ex) {
@@ -146,8 +164,11 @@ public class SQL {
 
         try{
             con=connect();
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("select * from users where username='"+user+"' AND password='"+pass+"'");
+            pstmt=  con.prepareStatement("select * from users where username= ? AND password= ? ");
+            pstmt.setString(1,user);
+            pstmt.setString(2,pass);
+
+            rs= pstmt.executeQuery();
             if(rs.next()==false){
                 check="1";
             }
@@ -164,8 +185,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -183,6 +204,7 @@ public class SQL {
                 stmt = con.createStatement();
                 stmt.addBatch("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                         "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
+                stmt.addBatch("CREATE TABLE IF NOT EXISTS " + user + "_items (serial INT(24) PRIMARY KEY, name VARCHAR(45), moms FLOAT,price FLOAT);");
                 stmt.addBatch("INSERT INTO users (username,password,date_added) VALUES " +
                         "('" +user + "','"+pass+"',CURDATE() );");
                 stmt.executeBatch();
@@ -221,9 +243,9 @@ public class SQL {
         boolean check=false;
         try{
             con=connect();
-            stmt = con.createStatement();
-            String query = "select * from users where username='"+user+"'";
-            rs = stmt.executeQuery(query);
+            pstmt = con.prepareStatement("select * from users where username= ?");
+            pstmt.setString(1,user);
+            rs = pstmt.executeQuery();
             if(rs.next()==false){
                 check=true;
             }
@@ -274,6 +296,72 @@ public class SQL {
 
         } catch (Exception ex) {
             System.out.println("Login fail5");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+
+    }
+    public void getitem(Context context,String user,String serial){
+        try {
+            con = connect();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select * from "+user+"_items where serial="+serial+"");
+                String s="";
+            if(rs.next()==true){
+                s=rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4);
+            }
+            System.out.println(s);
+
+            intent5.putExtra("get", s);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent5);
+
+        } catch (Exception ex) {
+            intent5.putExtra("get", "0");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent5);
+            System.out.println("Login fail77");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                Logger lgr = Logger.getLogger(Version.class.getName());
+                lgr.log(Level.WARNING, ex.getMessage(), ex);
+            }
+        }
+
+    }
+    public void saveitem(Context context,String user,String serial,String name,String moms,String price){
+        try {
+            con = connect();
+            stmt = con.createStatement();
+
+            String q="INSERT INTO "+user+"_items (serial,name,moms,price) VALUES ("+serial+",'"+name+"',"+moms+","+price+")";
+            System.out.println(q);
+            stmt.execute(q);
+
+
+        } catch (Exception ex) {
+            System.out.println("Login fail6");
         } finally {
             try {
                 if (rs != null) {
