@@ -28,7 +28,7 @@
             android:layout_height="match_parent">
 
     <EditText
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/buy_price"
         android:hint="Price"
@@ -135,7 +135,7 @@
         app:layout_constraintHorizontal_bias="0.0" />
 
     <EditText
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/sell_price"
         android:hint="Price"
