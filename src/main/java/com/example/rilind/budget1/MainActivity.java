@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     static String username="";
     static String password="";
     static EditText user ;
+    static int id=0;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

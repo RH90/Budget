@@ -58,33 +58,34 @@ public class SQL {
         String color = "0";
         try {
             //checks how many items there are inside the remote database, so we know how many item we should send to it.
-            int index = index(context,user);
+            int index = index(context);
             con = connect();
             //stmt = con.createStatement();
-            pstmt= con.prepareStatement("INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
+            pstmt= con.prepareStatement("INSERT INTO budget (Item,Moms,Price,Comment,Date,IN_UT,used,user) VALUES " +
                     "(?,?,?,?,?,?,?,?)");
             //get data from local database
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
             Cursor c = myDB.rawQuery("SELECT * FROM "+user+" ", null);
             String query = "";
             c.moveToFirst();
+            System.out.println(MainActivity.id);
             System.out.println("::"+index);
             //store the items to a batch
+            int i = 0;
             while (!c.isAfterLast()) {
-                int i = c.getInt(0);
                 if (index <= i || index == 0) {
-                    query = "INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) VALUES " +
-                            "(" + c.getInt(0) + ",'" + c.getString(1) + "'," + c.getString(2) + "," + c.getString(3) + ",'" + c.getString(4) + "','" + c.getString(5) + "','" + c.getString(6) + "','" + c.getString(7) + "');";
-                    pstmt.setInt(1,c.getInt(0));
-                    pstmt.setString(2,c.getString(1));
-                    pstmt.setFloat(3,c.getFloat(2));
-                    pstmt.setFloat(4,c.getFloat(3));
-                    pstmt.setString(5,c.getString(4));
-                    pstmt.setString(6,c.getString(5));
-                    pstmt.setString(7,c.getString(6));
-                    pstmt.setString(8,c.getString(7));
+                    query="1";
+                    pstmt.setString(1,c.getString(1));
+                    pstmt.setFloat(2,c.getFloat(2));
+                    pstmt.setFloat(3,c.getFloat(3));
+                    pstmt.setString(4,c.getString(4));
+                    pstmt.setString(5,c.getString(5));
+                    pstmt.setString(6,c.getString(6));
+                    pstmt.setString(7,c.getString(7));
+                    pstmt.setInt(8,MainActivity.id);
                     pstmt.execute();
                 }
+                i++;
                 c.moveToNext();
             }
             //execute all the statements that where stored in the batch
@@ -119,16 +120,16 @@ public class SQL {
     }
 
     //get the amount of items in remote database
-    public int index(Context context,String user) {
+    public int index(Context context) {
         int index = 0;
         try {
             con = connect();
 
-            stmt = con.createStatement();
+            pstmt = con.prepareStatement("SELECT * FROM budget where user= ?");
+            pstmt.setInt(1,MainActivity.id);
 
-
-            String query = "SELECT * FROM "+user+"";
-            rs = stmt.executeQuery(query);
+            //String query = "SELECT * FROM "+user+"";
+            rs = pstmt.executeQuery();
 
             rs.last();
 
@@ -145,8 +146,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -171,6 +172,8 @@ public class SQL {
             rs= pstmt.executeQuery();
             if(rs.next()==false){
                 check="1";
+            }else{
+                MainActivity.id=rs.getInt(1);
             }
 
 
@@ -201,13 +204,11 @@ public class SQL {
         if(checkuser(user)) {
             try {
                 con = connect();
-                stmt = con.createStatement();
-                stmt.addBatch("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
-                        "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
-                stmt.addBatch("CREATE TABLE IF NOT EXISTS " + user + "_items (serial INT(24) PRIMARY KEY, name VARCHAR(45), moms FLOAT,price FLOAT);");
-                stmt.addBatch("INSERT INTO users (username,password,date_added) VALUES " +
-                        "('" +user + "','"+pass+"',CURDATE() );");
-                stmt.executeBatch();
+                pstmt = con.prepareStatement("INSERT INTO users (username,password,date_added) VALUES " +
+                        "(?,?,CURDATE() );");
+                pstmt.setString(1,user);
+                pstmt.setString(2,pass);
+                pstmt.execute();
                 SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
                 myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                         "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
@@ -222,8 +223,8 @@ public class SQL {
                     if (rs != null) {
                         rs.close();
                     }
-                    if (stmt != null) {
-                        stmt.close();
+                    if (pstmt != null) {
+                        pstmt.close();
                     }
                     if (con != null) {
                         con.close();
@@ -261,8 +262,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -301,8 +302,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -314,12 +315,14 @@ public class SQL {
         }
 
     }
-    public void getitem(Context context,String user,String serial){
+    public void getitem(Context context,String serial){
         try {
             con = connect();
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("select * from "+user+"_items where serial="+serial+"");
-                String s="";
+            pstmt = con.prepareStatement("select * from budget_items where serial= ? AND user= ?");
+            pstmt.setString(1,serial);
+            pstmt.setInt(2,MainActivity.id);
+            rs = pstmt.executeQuery();
+            String s="";
             if(rs.next()==true){
                 s=rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4);
             }
@@ -337,8 +340,8 @@ public class SQL {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();
@@ -350,25 +353,31 @@ public class SQL {
         }
 
     }
-    public void saveitem(Context context,String user,String serial,String name,String moms,String price){
+    public void saveitem(String serial,String name,Double moms,Double price){
         try {
-            con = connect();
-            stmt = con.createStatement();
 
-            String q="INSERT INTO "+user+"_items (serial,name,moms,price) VALUES ("+serial+",'"+name+"',"+moms+","+price+")";
-            System.out.println(q);
-            stmt.execute(q);
+            System.out.println("serial::" +serial);
+            con = connect();
+            pstmt = con.prepareStatement("INSERT INTO budget_items (serial,name,moms,price,user) VALUES (?,?,?,?,?)");
+            pstmt.setString(1,serial);
+            pstmt.setString(2,name);
+            pstmt.setDouble(3,moms);
+            pstmt.setDouble(4,price);
+            pstmt.setInt(5,MainActivity.id);
+            pstmt.execute();
 
 
         } catch (Exception ex) {
-            System.out.println("Login fail6");
+            System.out.println("INSERT INTO budget_items (serial,name,moms,price,user) " +
+                    "VALUES ("+serial+",'"+name+"',"+moms+","+moms+","+MainActivity.id+")");
+            System.out.println("Login fail6: saveitem");
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
-                if (stmt != null) {
-                    stmt.close();
+                if (pstmt != null) {
+                    pstmt.close();
                 }
                 if (con != null) {
                     con.close();

@@ -146,8 +146,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
                     SQL fc = new SQL();
                     Thread thread = new Thread() {
                         public void run() {
-                            fc.saveitem(getActivity().getApplicationContext()
-                                    , MainActivity.username, serialnum.getText().toString(), item, String.valueOf(moms), String.valueOf(price));
+                            fc.saveitem(serialnum.getText().toString(),item, moms, price);
                         }
                     };
                     thread.start();
@@ -200,7 +199,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
             SQL fc = new SQL();
             Thread thread = new Thread() {
                 public void run() {
-                        fc.getitem(getActivity().getApplicationContext(),MainActivity.username,message);
+                        fc.getitem(getActivity().getApplicationContext(),message);
                 }
             };
             thread.start();
@@ -212,7 +211,8 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("get");
-            if(message.equalsIgnoreCase("")){
+            System.out.println("message: " + message);
+            if(message.equalsIgnoreCase("")||message.equalsIgnoreCase("0")){
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("This item is not in the DB");
                 // Set up the input

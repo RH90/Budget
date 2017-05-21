@@ -126,7 +126,7 @@ public class Settings extends AppCompatActivity {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
             TextView tv =(TextView) findViewById(R.id.updated);
-
+            System.out.println("last: "+message);
             if(message.equalsIgnoreCase("1")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
