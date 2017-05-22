@@ -171,24 +171,44 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
             double kopt_med_moms = 0;
             double moms_in = 0;
             double solt_med_moms = 0;
+            double skatt=0;
             c.moveToFirst();
             //loop through the given items and calculate the results
             while (!c.isAfterLast()) {
                 //if the item is a expense then: total_VAT_expense += item * item_VAT
                 if (c.getString(6).endsWith("UT")) {
-                    moms_ut += c.getDouble(3)- c.getDouble(3)/(1+c.getDouble(2));
-                    kopt_med_moms += c.getDouble(3);
+                    if(c.getDouble(2)==0.3){
+                        kopt_med_moms+=c.getDouble(3);
+                        skatt+=c.getDouble(3)*0.3125;
+                    }else {
+                        moms_ut += c.getDouble(3) - c.getDouble(3) / (1 + c.getDouble(2));
+                        kopt_med_moms += c.getDouble(3);
+                    }
                 } else {
-                    if (c.getString(7).equalsIgnoreCase("no"))
-                        moms_in +=  c.getDouble(3)- c.getDouble(3)/(1+c.getDouble(2));
-                        //if the item is a sold item and is used then: total_revenue_VAT += item * item_vat * 80%
-                    else
-                        moms_in += c.getDouble(3)- c.getDouble(3)/(1+(c.getDouble(2)*0.8));
+                    if (c.getDouble(2)==0.4){
+
+                    }else {
+                        if (c.getString(7).equalsIgnoreCase("no"))
+                            moms_in += c.getDouble(3) - c.getDouble(3) / (1 + c.getDouble(2));
+                            //if the item is a sold item and is used then: total_revenue_VAT += item * item_vat * 80%
+                        else
+                            moms_in += c.getDouble(3) - c.getDouble(3) / (1 + (c.getDouble(2) * 0.8));
+                    }
                     solt_med_moms += c.getDouble(3) ;
                 }
                 c.moveToNext();
             }
             double moms_total=-(moms_in - moms_ut);
+
+            double test =solt_med_moms;
+            if(test>=50000){
+                skatt+= 50000*0.33;
+                test=test-50000;
+                skatt+=test*0.5;
+            }else{
+                skatt+=test*0.33;
+            }
+
             //write out the results on the textfields
             String line=            "  ______________________________________________________________________________";
             TextView one = (TextView) v.findViewById(R.id.textToPdf);
@@ -200,8 +220,10 @@ public class Results extends Fragment implements AdapterView.OnItemSelectedListe
                                     line+"\n"+
                                     "    Moms total:                                                  %10.2f Kr\n\n" +
                                     line+"\n"+
-                                    "    Vinst:                                                       %10.2f Kr",
-                    solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total);
+                                    "    Vinst:                                                       %10.2f Kr\n\n" +
+                                    line+"\n"+
+                                    "    Skatt:                                                       %10.2f Kr"
+                    , solt_med_moms,-kopt_med_moms,moms_total,solt_med_moms - kopt_med_moms + moms_total,skatt);
 
             one.setText(s);
             one.setVisibility(View.VISIBLE);

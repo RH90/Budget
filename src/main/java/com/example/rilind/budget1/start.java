@@ -16,20 +16,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class start extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class start extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
     View v;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,9 +60,13 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
 
         Spinner s1 = (Spinner) v.findViewById(R.id.buy_moms);
         Spinner s2 = (Spinner) v.findViewById(R.id.sell_moms);
-
+        Spinner s3 = (Spinner) v.findViewById(R.id.type_utgift);
+        s3.setOnItemSelectedListener(this);
+        Spinner s4 = (Spinner) v.findViewById(R.id.type_intakt);
+        s4.setOnItemSelectedListener(this);
         setSpinner(s1);
         setSpinner(s2);
+
 
 
     }
@@ -107,13 +108,18 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
             //checks if the "used" button is pressed
             if (checkBox.isChecked())
                 check = "yes";
-
             String item = sell_item.getText().toString();
             double price = Double.parseDouble(sell_price.getText().toString());
             String comment = sell_comment.getText().toString();
             double moms;
+            Spinner spinner =(Spinner) v.findViewById(R.id.type_utgift);
+            Spinner spinner_in =(Spinner) v.findViewById(R.id.type_intakt);
             //get the amount of VAT
-            if (s.charAt(0) == '2')
+            if(spinner.getSelectedItemPosition()==1&&IN_UT.equalsIgnoreCase("ut"))
+                moms=0.3;
+            else if(spinner_in.getSelectedItemPosition()==1&&IN_UT.equalsIgnoreCase("in"))
+                moms=0.4;
+            else if(s.charAt(0) == '2')
                 moms = 0.25;
             else if (s.charAt(0) == '1')
                 moms = 0.12;
@@ -263,5 +269,44 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
             savebuy();
         else
             barcodebutton();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if(adapterView.getId()==R.id.type_utgift) {
+            Spinner s = (Spinner) adapterView;
+            Spinner s1 = (Spinner) v.findViewById(R.id.buy_moms);
+            CheckBox c =(CheckBox) v.findViewById(R.id.checkBox_b);
+            if (s.getSelectedItemPosition() == 0) {
+                s1.setVisibility(View.VISIBLE);
+                c.setVisibility(View.VISIBLE);
+            } else {
+                EditText e =(EditText) v.findViewById(R.id.buy_item);
+                e.setText("L\u00f6n");
+                s1.setVisibility(View.INVISIBLE);
+                c.setVisibility(View.INVISIBLE);
+            }
+        }
+        if(adapterView.getId()==R.id.type_intakt){
+            Spinner s = (Spinner) adapterView;
+            Spinner s1 = (Spinner) v.findViewById(R.id.sell_moms);
+            CheckBox c =(CheckBox) v.findViewById(R.id.checkBox_s);
+            if (s.getSelectedItemPosition() == 0) {
+                s1.setVisibility(View.VISIBLE);
+                c.setVisibility(View.VISIBLE);
+            } else {
+                EditText e =(EditText) v.findViewById(R.id.sell_item);
+                e.setText("Utanf\u00f6r");
+                s1.setVisibility(View.INVISIBLE);
+                c.setVisibility(View.INVISIBLE);
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

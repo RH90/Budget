@@ -165,7 +165,7 @@ public class SQL {
 
         try{
             con=connect();
-            pstmt=  con.prepareStatement("select * from users where username= ? AND password= ? ");
+            pstmt=  con.prepareStatement("select * from users where username=binary ? AND password=binary ? ");
             pstmt.setString(1,user);
             pstmt.setString(2,pass);
 
@@ -316,27 +316,26 @@ public class SQL {
 
     }
     public void getitem(Context context,String serial){
+        String s="";
         try {
             con = connect();
             pstmt = con.prepareStatement("select * from budget_items where serial= ? AND user= ?");
             pstmt.setString(1,serial);
             pstmt.setInt(2,MainActivity.id);
             rs = pstmt.executeQuery();
-            String s="";
+
             if(rs.next()==true){
                 s=rs.getString(2)+"\n"+rs.getString(3)+"\n"+rs.getString(4);
             }
             System.out.println(s);
 
-            intent5.putExtra("get", s);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent5);
-
         } catch (Exception ex) {
-            intent5.putExtra("get", "0");
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent5);
+
             System.out.println("Login fail77");
         } finally {
             try {
+                intent5.putExtra("get", s);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent5);
                 if (rs != null) {
                     rs.close();
                 }

@@ -73,11 +73,20 @@ public class History extends Fragment{
         s = s + "------------------------------------------------\n";
         //loops through the database and prints it out
         while (!c.isBeforeFirst()) {
-            if (c.getString(6).endsWith("UT"))
+            String moms =c.getString(2);
+            if (c.getString(6).endsWith("UT")) {
                 //it the item is a "utgift" then show a minus in price
-                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", c.getString(1), c.getString(2), "-" + c.getString(3), c.getString(4), c.getString(5));
-            else
-                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5));
+
+                if(c.getString(2).equalsIgnoreCase("0.3"))
+                    moms="";
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", c.getString(1), moms, "-" + c.getString(3), c.getString(4), c.getString(5));
+
+            }else {
+                if(c.getString(2).equalsIgnoreCase("0.4"))
+                    moms="";
+                s = s + String.format("%-10s|%4s|%7s|%-13s|%-10s\n", c.getString(1), moms, c.getString(3), c.getString(4), c.getString(5));
+
+            }
             c.moveToPrevious();
         }
         //output to Textview

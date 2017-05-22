@@ -151,10 +151,10 @@ public class BarcodeRead extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        intent.putExtra("message", send);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         cameraSource.release();
         barcodeDetector.release();
+        intent.putExtra("message", send);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
     }
 

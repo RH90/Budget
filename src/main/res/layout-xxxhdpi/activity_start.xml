@@ -26,6 +26,25 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <Spinner
+                android:layout_width="113dp"
+                android:layout_height="37dp"
+                android:id="@+id/type_utgift"
+                android:entries="@array/type"
+                android:dropDownWidth="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/serialnum"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/textView7" />
+            <Spinner
+                android:layout_width="113dp"
+                android:layout_height="37dp"
+                android:id="@+id/type_intakt"
+                android:entries="@array/type_in"
+                android:dropDownWidth="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/textView14" />
 
     <EditText
         android:inputType="numberDecimal"
@@ -93,7 +112,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:textSize="18sp"
         android:layout_marginStart="4dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:id="@+id/textView7" />
 
     <TextView
         android:text="Intäkt"
@@ -105,7 +125,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="18sp"
         android:layout_marginStart="4dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:id="@+id/textView14" />
 
     <EditText
         android:inputType="textPersonName"
