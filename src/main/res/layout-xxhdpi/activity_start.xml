@@ -29,7 +29,8 @@
             android:layout_height="match_parent">
 
             <Spinner
-                android:layout_width="113dp"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"
                 android:layout_height="37dp"
                 android:id="@+id/type_utgift"
                 android:entries="@array/type"
@@ -37,7 +38,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/serialnum"
                 app:layout_constraintLeft_toRightOf="@+id/textView3" />
             <Spinner
-                android:layout_width="113dp"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"
                 android:layout_height="37dp"
                 android:id="@+id/type_intakt"
                 android:entries="@array/type_in"
@@ -190,7 +192,7 @@
         android:spinnerMode="dropdown"
 ></Spinner>
     <Spinner
-        android:layout_width="wrap_content"
+
         android:id="@+id/sell_moms"
         android:entries="@array/moms"
         app:layout_constraintLeft_toRightOf="@+id/sell_item"
@@ -200,6 +202,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_height="42dp"
         android:dropDownWidth="wrap_content"
+        android:layout_width="wrap_content"
         android:spinnerMode="dropdown" />
     <CheckBox
         android:text="Used"

@@ -28,7 +28,8 @@
             android:layout_height="match_parent">
 
             <Spinner
-                android:layout_width="113dp"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"
                 android:layout_height="37dp"
                 android:id="@+id/type_utgift"
                 android:entries="@array/type"
@@ -37,7 +38,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toRightOf="@+id/textView2" />
             <Spinner
-                android:layout_width="113dp"
+                android:layout_width="wrap_content"
+                android:spinnerMode="dropdown"
                 android:layout_height="37dp"
                 android:id="@+id/type_intakt"
                 android:entries="@array/type_in"
