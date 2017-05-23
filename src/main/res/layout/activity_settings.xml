@@ -59,7 +59,7 @@
         />
 
     <TextView
-        android:text="User info"
+        android:text="About this app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView16"
@@ -71,22 +71,13 @@
         android:background="@android:color/darker_gray"
         android:layout_height="5dp" />
 
-    <Button
+    <TextView
+        android:text="Version: "
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/numEmp"
-        android:textAlignment="viewStart"
-        android:onClick="numb"
-        android:backgroundTint="@color/gg"
-        android:text="Antal anställda: 0" />
+        android:id="@+id/version"
+        android:textSize="20sp"
+        android:layout_weight="0.04" />
 
-    <Switch
-        android:text="   Äger bara en företag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/switch2"
-        android:layout_weight="0.06"
-        android:textSize="14sp"
-        android:checked="true" />
 
 </LinearLayout>

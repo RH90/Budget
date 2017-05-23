@@ -30,42 +30,11 @@ public class Settings extends AppCompatActivity {
                 new IntentFilter("event1"));
 
         setContentView(R.layout.activity_settings);
-        Button b= (Button) findViewById(R.id.numEmp);
-        b.setText("Antal anst\u00e4llda: 0");
+
+        TextView versionname = (TextView) findViewById(R.id.version);
+        versionname.setText("version : " + BuildConfig.VERSION_NAME);
     }
-    public void numb(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Ange antal Inst\u00e4llda: ");
-        // Set up the input
-        final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
-        builder.setView(input);
 
-// Set up the buttons
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    in = Integer.parseInt(input.getText().toString());
-                    Button b = (Button) view;
-                    b.setText("Antal anst\u00e4llda: " + in);
-                }catch (Exception e){
-
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-
-    }
     public void sync(View view){
         SQL fc = new SQL();
         Thread thread = new Thread() {

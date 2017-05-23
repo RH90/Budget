@@ -26,6 +26,7 @@ public class BarcodeRead extends AppCompatActivity {
     private SurfaceView cameraView;
     private TextView barcodeValue;
     private String send="";
+    private boolean check=true;
     boolean toggle=false;
     Intent intent = new Intent("barcode");
 
@@ -87,7 +88,11 @@ public class BarcodeRead extends AppCompatActivity {
                         //bar.valueFormat==Barcode.PHONE;
                         //String value = bar.phone.number;
                         send=bar.displayValue;
-
+                        if(check) {
+                            intent.putExtra("message", send);
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                            check=false;
+                        }
                         finish();
 
 
@@ -153,9 +158,6 @@ public class BarcodeRead extends AppCompatActivity {
         super.onDestroy();
         cameraSource.release();
         barcodeDetector.release();
-        intent.putExtra("message", send);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
     }
 
 

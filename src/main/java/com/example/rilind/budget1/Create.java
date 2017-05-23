@@ -19,6 +19,8 @@ public class Create extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("event3"));
         setContentView(R.layout.activity_create);
+
+
     }
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -38,7 +40,10 @@ public class Create extends AppCompatActivity {
         EditText u = (EditText) findViewById(R.id.username);
         EditText p1 = (EditText) findViewById(R.id.pass_1);
         EditText p2 = (EditText) findViewById(R.id.pass_2);
-        if(p1.getText().toString().equals(p2.getText().toString())){
+        String s_u =u.getText().toString().trim();
+        String s_p1 =u.getText().toString().trim();
+        String s_p2 =u.getText().toString().trim();
+        if(s_p1.equals(s_p2)&&!s_p1.equals("")&&!s_p2.equals("")&&!s_u.equals("")){
             SQL fc = new SQL();
             Thread thread = new Thread() {
                 public void run() {
