@@ -46,8 +46,8 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("barcode"));
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(getget,
-                new IntentFilter("getget"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(reciveBarcode,
+                new IntentFilter("reciveBarcode"));
 
         CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox_b);
         checkBox.setOnCheckedChangeListener(this);
@@ -213,7 +213,7 @@ public class start extends Fragment implements CompoundButton.OnCheckedChangeLis
         }
     };
 
-    private BroadcastReceiver getget = new BroadcastReceiver() {
+    private BroadcastReceiver reciveBarcode = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("get");

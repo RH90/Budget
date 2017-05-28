@@ -284,12 +284,12 @@ public class SQL {
             rs = stmt.executeQuery("select * from "+user+"");
 
             SQLiteDatabase myDB = context.openOrCreateDatabase("Budget", MODE_PRIVATE, null);
+            myDB.execSQL("drop table if exist "+user+"");
             myDB.execSQL("CREATE TABLE IF NOT EXISTS " + user + " (id INT(11), item VARCHAR(45), moms FLOAT,price FLOAT," +
                     "comment VARCHAR(45),date DATE,IN_UT VARCHAR(45),used VARCHAR(45));");
-            myDB.delete(user, null, null);
             rs.first();
             while(!rs.isAfterLast()){
-                myDB.execSQL("INSERT INTO "+MainActivity.username+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
+                myDB.execSQL("INSERT INTO "+user+" (id,Item,Moms,Price,Comment,Date,IN_UT,used) " +
                         "VALUES (" + rs.getString(1) + ",'" + rs.getString(2) + "'," + rs.getString(3) + "," + rs.getString(4) + ",'" +
                         rs.getString(5) + "','" + rs.getString(6) + "','" + rs.getString(7) + "','" + rs.getString(8) + "');");
                 rs.next();

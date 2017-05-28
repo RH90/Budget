@@ -34,21 +34,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("event2"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(test,
-                new IntentFilter("event3"));
+
         setContentView(R.layout.activity_main);
         user = (EditText) findViewById(R.id.editText2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         //ask for permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -73,15 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private BroadcastReceiver test = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String message = intent.getStringExtra("message");
-            EditText user = (EditText) findViewById(R.id.editText2);
-            user.setText(message);
 
-        }
-    };
     public void ss(){
         EditText user = (EditText) findViewById(R.id.editText2);
         EditText pass = (EditText) findViewById(R.id.editText3);
@@ -110,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         EditText user = (EditText) findViewById(R.id.editText2);
         EditText pass = (EditText) findViewById(R.id.editText3);
         if(user.getText().toString().equalsIgnoreCase("root")&&pass.getText().toString().equalsIgnoreCase("root")){
+            id=-1;
             ss();
         }else {
             SQL fc = new SQL();

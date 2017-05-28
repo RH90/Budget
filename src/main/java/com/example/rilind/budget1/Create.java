@@ -41,8 +41,8 @@ public class Create extends AppCompatActivity {
         EditText p1 = (EditText) findViewById(R.id.pass_1);
         EditText p2 = (EditText) findViewById(R.id.pass_2);
         String s_u =u.getText().toString().trim();
-        String s_p1 =u.getText().toString().trim();
-        String s_p2 =u.getText().toString().trim();
+        String s_p1 =p1.getText().toString().trim();
+        String s_p2 =p2.getText().toString().trim();
         if(s_p1.equals(s_p2)&&!s_p1.equals("")&&!s_p2.equals("")&&!s_u.equals("")){
             SQL fc = new SQL();
             Thread thread = new Thread() {
@@ -56,7 +56,7 @@ public class Create extends AppCompatActivity {
 
         }else{
             TextView err = (TextView) findViewById(R.id.error);
-            err.setText("Password not same!");
+            err.setText("Error!");
         }
 
     }

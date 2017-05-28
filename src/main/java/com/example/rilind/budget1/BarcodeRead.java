@@ -34,10 +34,10 @@ public class BarcodeRead extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_barcode);
-        gogo();
+        start();
 
     }
-    public void gogo(){
+    public void start(){
         cameraView = (SurfaceView) findViewById(R.id.surface_view);
         barcodeValue = (TextView) findViewById(R.id.barcode_value);
 
